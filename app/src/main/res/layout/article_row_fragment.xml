@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="4dp"
+
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Articolo numero -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Articolo num : "
+                android:textSize="12sp"
+                android:textStyle="italic"/>
+            <TextView
+                android:id="@+id/articolo_numero"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:text="1"/>
+        </LinearLayout>
+
+
+        <!--Rreshti i pare-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/article_name"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="#67c906"
+                android:text="____________"/>
+
+            <LinearLayout
+                android:id="@+id/select_article"
+                android:layout_weight="1"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_txt_background"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:src="@drawable/ic_icon_find_article">
+                </ImageView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dp"
+                    android:layout_gravity="center"
+                    android:text="Seleziona Articolo" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!--Rreshti i dyte-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:gravity="bottom"
+                android:layout_marginTop="8dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Codice :"
+                android:textStyle="bold"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/article_id"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textColor="#67c906"
+                android:text="__________"
+                android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/article_quantita"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Quantita"
+                    android:textColor="#000"
+                    android:inputType="number"
+                    android:textSize="13sp"/>
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+        <!-- Description-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_height="70dp"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:paddingTop="2dp">
+
+            <EditText
+                android:id="@+id/article_descrizione"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="4dp"
+                android:background="@color/white"
+                android:focusableInTouchMode="true"
+                android:gravity="start"
+                android:hint="Descrizione..."
+                android:maxLines="10"
+                android:textColor="#494949"
+                android:textSize="14sp" />
+        </RelativeLayout>
+
+        <!--Rreshti i trete-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <!-- unita di misura majtas-->
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:weightSum="2"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Unita di misura :"
+                    android:textStyle="bold"
+                    android:layout_weight="1.3"/>
+
+                <TextView
+                    android:id="@+id/unita_misura"
+                    android:layout_width="0dp"
+                    android:textColor="#67c906"
+                    android:layout_weight="076"
+                    android:text="______"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
+            <!-- Codice Iva djathtas-->
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Codice Iva :"
+                    android:textStyle="bold"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:id="@+id/codice_iva"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text= "__"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!--Rreshti i katert-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <!-- unita di misura majtas-->
+            <LinearLayout
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:paddingTop="10dp"
+                    android:layout_width="0dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_height="wrap_content"
+                    android:text="Prezzo unit :"
+                    android:paddingBottom="10dp"
+                    android:textStyle="bold"
+                    android:layout_weight="1"/>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp">
+                    <EditText
+                        android:id="@+id/prezzo_unit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:textColor="#000"
+                        android:textSize="13sp"/>
+
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+
+            <!-- Codice Iva djathtas-->
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Sconto % :"
+                    android:textStyle="bold"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:id="@+id/sconto_percentuale"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text= "22"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- rreshti i peste -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <!-- unita di misura majtas-->
+            <LinearLayout
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Imponibile :"
+                    android:textStyle="bold"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:id="@+id/imponibile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="________"
+                    android:layout_weight="1"/>
+
+            </LinearLayout>
+
+            <!-- Codice Iva djathtas-->
+            <LinearLayout
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Sconto:"
+                    android:textStyle="bold"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:id="@+id/sconto_value"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text= "10"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!--Rreshti i fundit -->
+        <LinearLayout
+            android:gravity="left"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="#67c906"
+                android:layout_height="wrap_content"
+                android:text="Prezzo Totale Articolo n."/>
+
+            <TextView
+                android:id="@+id/articolo_numero_bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="#67c906"
+                android:text="1"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="#67c906"
+                android:text=" = "/>
+            <TextView
+                android:id="@+id/prezzo_totale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textStyle="italic"
+                android:textColor="#67c906"
+                android:text="139072.45"/>
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>
+</ScrollView>

@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="10"
+    android:background="@color/colorPrimary"
+    >
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <!-- headeri i dokumentit -->
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/cliente_nome_adress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:text="via San Salvatore, 24 - 2344 Cagliari(CA)"/>
+
+        <!-- telefono dhe codi pagamento-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="1.8"
+            android:layout_margin="4dp"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/cliente_telefono"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:text="+2133 2132131 213"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:weightSum="2"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/white"
+                    android:textAlignment="center"
+                    android:text="Cod. Pag :"/>
+
+                <TextView
+                    android:id="@+id/codice_pagamento"
+                    android:layout_width="0dp"
+                    android:textColor="@color/white"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text=" RDFG"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- text raportino -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:text="Rapportino di Lavoro n 325/A del 13/09/2018"
+            android:textAlignment="center"
+            android:layout_marginTop="5dp"
+            />
+    </LinearLayout>
+
+   <RelativeLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_margin="3dp"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+
+        android:layout_weight="7"
+        android:layout_height="0dp">
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:layout_weight="2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="3dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:background="@color/white">
+
+         <TextView
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:text="Totali Documento Rapla n : 325/A"
+             android:textAlignment="center"
+             android:layout_margin="3dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="2"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Num Articolo: "/>
+                <TextView
+                    android:id="@+id/articolo_numero"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="3"/>
+
+
+
+            </LinearLayout>
+
+
+            <!--Layout ne te djathte per llogaritjen e totalit-->
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+
+                android:orientation="vertical">
+                <!-- Imponibile-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="2"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Imponibile :"
+                        android:layout_weight="1"/>
+                    <TextView
+                        android:id="@+id/imponibile"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="1342490.33"
+                        android:layout_weight="1"/>
+
+                </LinearLayout>
+
+                <!-- IVA-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="2"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Iva :"
+                        android:layout_weight="1"/>
+                    <TextView
+                        android:id="@+id/iva"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="213123.33"
+                        android:layout_weight="1"/>
+
+                </LinearLayout>
+                <!-- Totale-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="2"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="TOTALE :"
+                        android:textStyle="bold"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:id="@+id/prezzo_totale"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="213213.33"
+                        android:layout_weight="1"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+     <!--Layout per llogaritjen e totalit ne varesi te artikujve qe agjenti ka futur-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorPrimary"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/vedi_documento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vedi Documento"
+                android:textColor="@color/white"
+
+                android:layout_marginLeft="10dp"
+                android:textSize="14sp"
+                android:background="@drawable/rectangle_shape"/>
+
+            <TextView
+                android:id="@+id/end_documento"
+                android:layout_marginLeft="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="End Doc"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:background="@drawable/rectangle_shape"/>
+
+            <TextView
+                android:id="@+id/prev_documento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="Prev "
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:background="@drawable/rectangle_shape"/>
+
+            <TextView
+                android:id="@+id/next_documento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="Next "
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:background="@drawable/rectangle_shape"/>
+
+            <TextView
+                android:id="@+id/new_row"
+                android:layout_marginLeft="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New Row"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:background="@drawable/rectangle_shape"/>
+
+        </LinearLayout>
+
+
+
+
+    </RelativeLayout>
+
+</LinearLayout>
