@@ -181,17 +181,7 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
     }
 
 
-    @Override
-    public void onArticleClicked(Article article) {
-        ((OrdineClienteActivity)getActivity()).hideDialog();
-        Vat articleVat = AliquoteController.getVatWithId(article.getCodiceIvaVendite());
-        this.article_nameTV.setText(article.getDescrizione());
-        this.codice_articoloTV.setText(article.getCodiceArticolo());
-        this.unita_di_misuraTV.setText(article.getCodiceUnitaDiMisura());
-        this.codice_ivaTV.setText(article.getCodiceIvaVendite());
-       // this.sconto_percentualeTV.setText(article.getPercentualeDiSconto1());
-        this.article = article;
-    }
+
 
     @Override
     public void onClick(View view) {
@@ -250,5 +240,17 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
             prezzo_unitarioET.setError("Please insert unit price!");
         }
         return flag;
+    }
+
+    @Override
+    public void onArticleClicked(Article article, int position) {
+        ((OrdineClienteActivity)getActivity()).hideDialog();
+        Vat articleVat = AliquoteController.getVatWithId(article.getCodiceIvaVendite());
+        this.article_nameTV.setText(article.getDescrizione());
+        this.codice_articoloTV.setText(article.getCodiceArticolo());
+        this.unita_di_misuraTV.setText(article.getCodiceUnitaDiMisura());
+        this.codice_ivaTV.setText(article.getCodiceIvaVendite());
+        // this.sconto_percentualeTV.setText(article.getPercentualeDiSconto1());
+        this.article = article;
     }
 }

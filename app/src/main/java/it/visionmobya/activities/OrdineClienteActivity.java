@@ -21,7 +21,9 @@ import it.visionmobya.fragments.CloserDocumentFragment;
 import it.visionmobya.fragments.RecyclerViewDialog;
 import it.visionmobya.listener.OnNewRowListener;
 import it.visionmobya.models.Article;
+import it.visionmobya.models.Client;
 import it.visionmobya.models.customModels.DocumentState;
+import it.visionmobya.utils.CodesUtil;
 
 public class OrdineClienteActivity extends AppCompatActivity  {
 
@@ -38,6 +40,8 @@ public class OrdineClienteActivity extends AppCompatActivity  {
     private FragmentTransaction fragmentTransaction;
     private OnNewRowListener onNewRowListener;
     private int currentDocumentPosition = 0;
+    private String activityTitle;
+    private Client selectedClient;
 
 
 
@@ -74,7 +78,6 @@ public class OrdineClienteActivity extends AppCompatActivity  {
     }
 
     private void initUI(){
-
         vedi_documentoTV = findViewById(R.id.vedi_documento);
         end_documentoTV = findViewById(R.id.end_documento);
         prev_documentoTV = findViewById(R.id.prev_documento);
@@ -87,7 +90,6 @@ public class OrdineClienteActivity extends AppCompatActivity  {
         cliente_telefoneTV = findViewById(R.id.cliente_telefono);
         codice_pagamentoTV = findViewById(R.id.codice_pagamento);
         next_documentoTV = findViewById(R.id.next_documento);
-
         //inicializimi i toolbarit
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -138,6 +140,9 @@ public class OrdineClienteActivity extends AppCompatActivity  {
                 showCloserDocumento();
             }
         });
+
+        //marrim klientin dhe mbushim te dhenat e nevojshme
+        getClientFromIntent();
     }
 
     @Override
@@ -225,6 +230,24 @@ public class OrdineClienteActivity extends AppCompatActivity  {
 
     public void setOnNewRowListener(OnNewRowListener onNewRowListener) {
         this.onNewRowListener = onNewRowListener;
+    }
+
+    private void getClientFromIntent(){
+        if(getIntent().getBundleExtra(CodesUtil.CLIENT_LIST_TO_CLIENT_ORDER)!=null){
+            if(getIntent().getBundleExtra(CodesUtil.CLIENT_LIST_TO_CLIENT_ORDER).getSerializable(CodesUtil.CLIENT_ARGUMENT)!=null){
+                Client selectedClient = (Client) getIntent().getBundleExtra(CodesUtil.CLIENT_LIST_TO_CLIENT_ORDER).getSerializable(CodesUtil.CLIENT_ARGUMENT);
+                setupActivityClientData(selectedClient);
+                this.selectedClient = selectedClient;
+            }
+        }
+    }
+
+    //bejme bind cdo view qe i perket data te klientit te zgjedhur
+    private void setupActivityClientData(Client client){
+      StringBuilder stringBuilder = new StringBuilder();
+      stringBuilder.append(client.getCodiceCliente()).append("  ").append(client.getRagioneSociale());
+      activityTitle = stringBuilder.toString();
+      getSupportActionBar().setTitle(activityTitle);
     }
 }
 

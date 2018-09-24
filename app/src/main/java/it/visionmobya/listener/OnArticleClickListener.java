@@ -4,6 +4,6 @@ import it.visionmobya.models.Article;
 
 public interface OnArticleClickListener {
 
-    void onArticleClicked(Article article);
+    void onArticleClicked(Article article, int position);
 
 }

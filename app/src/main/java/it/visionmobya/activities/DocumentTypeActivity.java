@@ -7,21 +7,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import it.visionmobya.CSVModule.VisionFileManager;
 import it.visionmobya.R;
-import it.visionmobya.listener.OnClickListenerItem;
+
+import it.visionmobya.listener.OnClientClickListener;
+import it.visionmobya.listener.OnDocumentClickListener;
+import it.visionmobya.models.Client;
 import it.visionmobya.models.DocumentCategory;
 import it.visionmobya.recyclerView.adapters.DocumentTypeAdapter;
+import it.visionmobya.utils.CodesUtil;
 
 
-public class DocumentTypeActivity extends AppCompatActivity implements OnClickListenerItem {
+public class DocumentTypeActivity extends AppCompatActivity implements OnDocumentClickListener {
 
     private Toolbar toolbar;
     private RecyclerView recyclerView;
@@ -68,9 +70,13 @@ public class DocumentTypeActivity extends AppCompatActivity implements OnClickLi
         documentTypeAdapter.setDocumentCategories(documentCategories);
     }
 
+
     @Override
-    public void onClickClient(View v, int position) {
+    public void onClickDocument(DocumentCategory documentCategory, int position) {
         Intent intent = new Intent(this, ClientListActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(CodesUtil.DOCUMENT_TYPE_ARGUMENT, documentCategory);
+        intent.putExtra(CodesUtil.DOCUMENT_TYPE_TO_CLIENT_LIST, bundle);
         startActivity(intent);
     }
 }

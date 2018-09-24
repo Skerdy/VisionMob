@@ -1,6 +1,8 @@
 package it.visionmobya.models;
 
-public class DocumentCategory {
+import java.io.Serializable;
+
+public class DocumentCategory implements Serializable{
 
     private String codiceDocumento;
     private String descrizioneDocumento;

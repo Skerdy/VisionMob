@@ -14,22 +14,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.visionmobya.R;
-import it.visionmobya.listener.OnClickListenerItem;
+import it.visionmobya.listener.OnClientClickListener;
 import it.visionmobya.models.Client;
 import it.visionmobya.recyclerView.viewholders.ClientListViewHolder;
 
 
 public class ClientListAdapter extends RecyclerView.Adapter<ClientListViewHolder> implements Filterable {
 
-    private OnClickListenerItem onClickListener;
+    private OnClientClickListener onClientClickListener;
     private Context context;
     private List<Client> clients;
     private List<Client> filteredClients;
     private List<Client> permanentClients;
 
 
-    public ClientListAdapter(OnClickListenerItem onClickListener, Context context,List<Client> clients) {
-        this.onClickListener = onClickListener;
+    public ClientListAdapter(OnClientClickListener onClientClickListener, Context context, List<Client> clients) {
+        this.onClientClickListener = onClientClickListener;
         this.context = context;
         this.clients = clients;
         this.permanentClients = clients;
@@ -39,15 +39,21 @@ public class ClientListAdapter extends RecyclerView.Adapter<ClientListViewHolder
     @Override
     public ClientListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_client_list, parent, false);
-        ClientListViewHolder clientListViewHolder = new ClientListViewHolder(itemView, onClickListener);
+        ClientListViewHolder clientListViewHolder = new ClientListViewHolder(itemView);
         return clientListViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ClientListViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ClientListViewHolder holder, final int position) {
         holder.nameClient.setText(clients.get(position).getRagioneSociale());
         holder.codeClient.setText(clients.get(position).getCodiceCliente());
         holder.address.setText(clients.get(position).getIndirizzo());
+        holder.clientLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClientClickListener.onClickClient(clients.get(position), position);
+            }
+        });
     }
 
     public void setClients(List<Client> clients ) {

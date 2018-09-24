@@ -1,27 +1,26 @@
 package it.visionmobya.recyclerView.viewholders;
 
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
 import it.visionmobya.R;
-import it.visionmobya.listener.OnClickListenerItem;
+import it.visionmobya.listener.OnClientClickListener;
+import it.visionmobya.listener.OnDocumentClickListener;
 
-public class DocumentTypeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-     public TextView docType;
-     OnClickListenerItem onClickListenerItem;
+public class DocumentTypeViewHolder extends RecyclerView.ViewHolder {
 
-    public DocumentTypeViewHolder(View itemView,OnClickListenerItem onClickListenerItem) {
+    public TextView docType;
+    public CardView docTypeCardView;
+
+
+    public DocumentTypeViewHolder(View itemView) {
         super(itemView);
-        this.onClickListenerItem = onClickListenerItem;
-
         docType = itemView.findViewById(R.id.docType);
-        itemView.setOnClickListener(this);
-    }
-
-    @Override
-    public void onClick(View v) {
-        onClickListenerItem.onClickClient(v,getAdapterPosition());
+        docTypeCardView = itemView.findViewById(R.id.document_type_cardview);
     }
 }
+
+

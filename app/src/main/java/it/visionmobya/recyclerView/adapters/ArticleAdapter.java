@@ -51,7 +51,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleViewHolder>  imp
             @Override
             public void onClick(View view) {
                 if(onArticleClickListener!=null){
-                    onArticleClickListener.onArticleClicked(articles.get(position));
+                    onArticleClickListener.onArticleClicked(articles.get(position), position);
                 }
             }
         });

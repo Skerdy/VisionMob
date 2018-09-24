@@ -5,20 +5,15 @@ import android.view.View;
 import android.widget.TextView;
 
 import it.visionmobya.R;
-import it.visionmobya.listener.OnClickListenerItem;
 
-public class ArticleCategoryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+public class ArticleCategoryViewHolder extends RecyclerView.ViewHolder  {
+
     public TextView article;
-    OnClickListenerItem onClickListenerItem;
-    public ArticleCategoryViewHolder(View itemView,OnClickListenerItem onClickListenerItem) {
+
+    public ArticleCategoryViewHolder(View itemView) {
         super(itemView);
-        this.onClickListenerItem = onClickListenerItem;
         article = itemView.findViewById(R.id.article);
-        itemView.setOnClickListener(this);
     }
 
-    @Override
-    public void onClick(View v) {
-        onClickListenerItem.onClickClient(v,getAdapterPosition());
-    }
 }

@@ -1,8 +1,9 @@
 package it.visionmobya.models;
 
+import java.io.Serializable;
 import java.util.StringJoiner;
 
-public class Client {
+public class Client implements Serializable {
 
     private String codiceCliente;
     private String ragioneSociale;
