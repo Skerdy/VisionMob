@@ -51,7 +51,7 @@ public class CustomConverter {
         client.setCategoria(fields.get(14));
         client.setSituazione(fields.get(15));
         client.setAgente(fields.get(16));
-        client.setTelefono(fields.get(17));
+        client.setTelefono(fields.get(20));
         client.setEmail(fields.get(18));
         client.setGiorniVisite(fields.get(19));
         client.setSequenza(fields.get(20));

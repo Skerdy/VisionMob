@@ -145,28 +145,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    private void logOut(){
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this, R.style.AlertDialogBox);
+        alertDialog.setTitle("Esci");
+        alertDialog.setMessage("Sei sicuro di voler uscire?");
+        alertDialog.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                mySharedPref.saveObjectToSharedPreference(CodesUtil.LOGGED_IN, false);
+                Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(loginIntent);
+                finish();
+            }
+        });
+        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        alertDialog.show();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.exit:
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(this, R.style.AlertDialogBox);
-                alertDialog.setTitle("Esci");
-                alertDialog.setMessage("Sei sicuro di voler uscire?");
-                alertDialog.setPositiveButton("Si", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        mySharedPref.saveObjectToSharedPreference(CodesUtil.LOGGED_IN, false);
-                        Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
-                        startActivity(loginIntent);
-                        finish();
-                    }
-                });
-                alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                alertDialog.show();
-
+                logOut();
                 return true;
 
             default:

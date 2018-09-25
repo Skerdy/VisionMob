@@ -35,6 +35,7 @@ public class DocumentTypeAdapter extends RecyclerView.Adapter<DocumentTypeViewHo
     @Override
     public void onBindViewHolder(@NonNull DocumentTypeViewHolder holder, final int position) {
         holder.docType.setText(documentCategories.get(position).getDescrizioneDocumento());
+        holder.docTypeCode.setText(documentCategories.get(position).getCodiceDocumento());
         holder.docTypeCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

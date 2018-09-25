@@ -16,9 +16,12 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +34,7 @@ import it.visionmobya.recyclerView.adapters.ClientListAdapter;
 import it.visionmobya.utils.CodesUtil;
 import it.visionmobya.utils.TextViewHelper;
 
-public class ClientListActivity extends AppCompatActivity implements OnClientClickListener, View.OnClickListener {
+public class ClientListActivity extends AppCompatActivity implements OnClientClickListener, View.OnClickListener, DatePickerDialog.OnDateSetListener {
     private Toolbar toolbar;
     private RecyclerView recyclerView;
     private ClientListAdapter clientListAdapter;
@@ -39,14 +42,16 @@ public class ClientListActivity extends AppCompatActivity implements OnClientCli
     private VisionFileManager visionFileManager;
     private TextView stato, zona, giro, localita, top_title;
     private DocumentCategory selectedDocumentCategory;
+    private Date pickedDate;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.client_list);
         initUI();
+        getDocumentFromIntent();
+        setupDatePicker();
         initData();
-
     }
 
     private void initUI(){
@@ -130,16 +135,22 @@ public class ClientListActivity extends AppCompatActivity implements OnClientCli
             if(getIntent().getBundleExtra(CodesUtil.DOCUMENT_TYPE_TO_CLIENT_LIST).getSerializable(CodesUtil.DOCUMENT_TYPE_ARGUMENT)!=null){
                 DocumentCategory documentCategory = (DocumentCategory) getIntent().getBundleExtra(CodesUtil.DOCUMENT_TYPE_TO_CLIENT_LIST).getSerializable(CodesUtil.DOCUMENT_TYPE_ARGUMENT);
                 this.selectedDocumentCategory = documentCategory;
+                bindDocumentDataToActivity(documentCategory);
             }
         }
     }
 
     private void bindDocumentDataToActivity(DocumentCategory documentCategory){
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
-        String todayDate = dateFormat.format(new Date());
-        String documentType = documentCategory.getDescrizioneDocumento();
-        String documentCounter = ""+ (Integer.parseInt(documentCategory.getConttatoreDocumento())+1);
-        top_title.setText(TextViewHelper.generateClientListTitle(documentType, documentCounter, todayDate ));
+        //ne fillim ver daten e sotme
+       setTopTitleText(documentCategory, new Date());
+
+    }
+
+    private void setTopTitleText(DocumentCategory documentCategory, Date date) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String todayDate = dateFormat.format(date);
+        this.pickedDate = date;
+        top_title.setText(TextViewHelper.generateClientListTitle(documentCategory, todayDate));
     }
 
 
@@ -148,9 +159,37 @@ public class ClientListActivity extends AppCompatActivity implements OnClientCli
         Intent intent = new Intent(this, OrdineClienteActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(CodesUtil.CLIENT_ARGUMENT, client);
+        bundle.putSerializable(CodesUtil.DOCUMENT_TYPE_ARGUMENT, selectedDocumentCategory);
+        bundle.putSerializable(CodesUtil.DATE_ARGUMENT,pickedDate);
         intent.putExtra(CodesUtil.CLIENT_LIST_TO_CLIENT_ORDER, bundle);
         startActivity(intent);
         finish();
+    }
+
+    private void setupDatePicker(){
+        Calendar now = Calendar.getInstance();
+        final DatePickerDialog dpd = DatePickerDialog.newInstance(
+                ClientListActivity.this,
+                now.get(Calendar.YEAR),
+                now.get(Calendar.MONTH),
+                now.get(Calendar.DAY_OF_MONTH)
+        );
+
+        top_title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dpd.show(getFragmentManager(), "Please pick a date!");
+            }
+        });
+    }
+
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(year, monthOfYear, dayOfMonth);
+            Date date = calendar.getTime();
+            this.pickedDate = date;
+            setTopTitleText(selectedDocumentCategory, date);
     }
 
 
@@ -171,4 +210,5 @@ public class ClientListActivity extends AppCompatActivity implements OnClientCli
                 break;
         }
     }
+
 }

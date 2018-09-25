@@ -12,14 +12,16 @@ import it.visionmobya.listener.OnDocumentClickListener;
 
 public class DocumentTypeViewHolder extends RecyclerView.ViewHolder {
 
-    public TextView docType;
+    public TextView docType, docTypeCode;
     public CardView docTypeCardView;
+
 
 
     public DocumentTypeViewHolder(View itemView) {
         super(itemView);
         docType = itemView.findViewById(R.id.docType);
         docTypeCardView = itemView.findViewById(R.id.document_type_cardview);
+        docTypeCode = itemView.findViewById(R.id.docTypeCode);
     }
 }
 
