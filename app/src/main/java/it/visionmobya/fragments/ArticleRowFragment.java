@@ -241,6 +241,12 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
         return scontoValue;
     }
 
+    //duke perfshire IVA
+    private Double calculateTotalePrezzo(){
+        Double prezzoTotale = 0.0;
+        return prezzoTotale;
+    }
+
 
 
 

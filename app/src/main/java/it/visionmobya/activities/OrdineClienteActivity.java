@@ -82,6 +82,7 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         ArticleRowsFragment articleRowsFragment = ArticleRowsFragment.newInstance(documentState);
         fragmentTransaction.addToBackStack("ArticleRowsFragment");
+        currentDocumentPosition = 0;
         fragmentTransaction.replace(R.id.fragmentContainer, articleRowsFragment, "ArticleRowsFragment");
         fragmentTransaction.commitAllowingStateLoss();
     }
@@ -173,9 +174,7 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
             confirmBackNavigation();
         }
         else {
-            for (int i = 0; i < getSupportFragmentManager().getBackStackEntryCount(); ++i) {
                 getSupportFragmentManager().popBackStack();
-            }
         }
     }
 

@@ -21,7 +21,8 @@ public class ArticleRowsFragment extends Fragment {
     public static final String FRAGMENT_ARGUMENTS = "articleAllRowsFragmentArguments";
     RecyclerView recyclerView;
     ArticleRowsAdapter articleRowsAdapter;
-    private ArrayList<DocumentState> documentState;
+    private ArrayList<DocumentState> documentStates;
+    private ArrayList<DocumentState> eliglibleDocumentStates;
 
     public static ArticleRowsFragment newInstance(ArrayList<DocumentState> documentState) {
         ArticleRowsFragment articleRowFragment = new ArticleRowsFragment();
@@ -34,12 +35,19 @@ public class ArticleRowsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.eliglibleDocumentStates = new ArrayList<>();
         if(getArguments().getSerializable(FRAGMENT_ARGUMENTS)!=null){
             //nese ka nje dokument state per kete fragment atehere e marrim dhe e atachojme ne referencen publike te document state te fragmentit specifik
-            documentState =  getArguments().getParcelableArrayList(FRAGMENT_ARGUMENTS);
+            documentStates =  getArguments().getParcelableArrayList(FRAGMENT_ARGUMENTS);
+            for(DocumentState documentState: documentStates){
+                if(documentState.isBindDirectly()){
+                    eliglibleDocumentStates.add(documentState);
+                }
+            }
         }
         else {
-            documentState = new ArrayList<>();
+            eliglibleDocumentStates = new ArrayList<>();
+            documentStates = new ArrayList<>();
         }
     }
 
@@ -58,7 +66,7 @@ public class ArticleRowsFragment extends Fragment {
         LinearLayoutManager llm1 = new LinearLayoutManager(getContext());
         llm1.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm1);
-        articleRowsAdapter = new ArticleRowsAdapter(documentState,getContext());
+        articleRowsAdapter = new ArticleRowsAdapter(eliglibleDocumentStates,getContext());
         recyclerView.setAdapter(articleRowsAdapter);
     }
 }

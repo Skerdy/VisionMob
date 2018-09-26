@@ -33,12 +33,14 @@ public class ArticleRowsAdapter extends RecyclerView.Adapter<ArticleRowsViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ArticleRowsViewHolder holder, int position) {
-        holder.articleName.setText(documentStates.get(position).getArticle().getDescrizione());
-        holder.codeArticolo.setText(documentStates.get(position).getArticle().getCodiceArticolo());
-        holder.unitMeasure.setText(documentStates.get(position).getArticle().getCodiceUnitaDiMisura());
-        holder.quantita.setText(documentStates.get(position).getQuantita().toString());
-        holder.totalFinal.setText(documentStates.get(position).getPrezzoTotaleArticle().toString());
-        holder.rowNr.setText(""+(position+1));
+        if(documentStates.get(position).isBindDirectly()) {
+            holder.articleName.setText(documentStates.get(position).getArticle().getDescrizione());
+            holder.codeArticolo.setText(documentStates.get(position).getArticle().getCodiceArticolo());
+            holder.unitMeasure.setText(documentStates.get(position).getArticle().getCodiceUnitaDiMisura());
+            holder.quantita.setText(documentStates.get(position).getQuantita().toString());
+            holder.totalFinal.setText(documentStates.get(position).getPrezzoTotaleArticle().toString());
+            holder.rowNr.setText("" + (position + 1));
+        }
 
     }
 
