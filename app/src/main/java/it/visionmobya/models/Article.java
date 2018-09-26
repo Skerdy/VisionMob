@@ -88,6 +88,39 @@ public class Article implements Serializable, Parcelable {
         FattorediConversione3 = in.readString();
     }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(codiceArticolo);
+        dest.writeString(descrizione);
+        dest.writeString(codiceUnitaDiMisura);
+        dest.writeString(codiceCategoria);
+        dest.writeString(listino1);
+        dest.writeString(Listino2);
+        dest.writeString(Listino3);
+        dest.writeString(Listino4);
+        dest.writeString(Listino5);
+        dest.writeString(Listino6);
+        dest.writeString(Listino7);
+        dest.writeString(Listino8);
+        dest.writeString(Listino9);
+        dest.writeString(codiceIvaVendite);
+        dest.writeString(PercentualeDiSconto1);
+        dest.writeString(PercentualeDiSconto2);
+        dest.writeString(PercentualeDiSconto3);
+        dest.writeString(alias);
+        dest.writeString(CodiceUnitàDiMisura1);
+        dest.writeString(CodiceUnitàDiMisura2);
+        dest.writeString(CodiceUnitàDiMisura3);
+        dest.writeString(FattorediConversione1);
+        dest.writeString(FattorediConversione2);
+        dest.writeString(FattorediConversione3);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
     public static final Creator<Article> CREATOR = new Creator<Article>() {
         @Override
         public Article createFromParcel(Parcel in) {
@@ -321,39 +354,6 @@ public class Article implements Serializable, Parcelable {
 
     public void setFattorediConversione3(String fattorediConversione3) {
         FattorediConversione3 = fattorediConversione3;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(codiceArticolo);
-        dest.writeString(descrizione);
-        dest.writeString(codiceUnitaDiMisura);
-        dest.writeString(codiceCategoria);
-        dest.writeString(listino1);
-        dest.writeString(Listino2);
-        dest.writeString(Listino3);
-        dest.writeString(Listino4);
-        dest.writeString(Listino5);
-        dest.writeString(Listino6);
-        dest.writeString(Listino7);
-        dest.writeString(Listino8);
-        dest.writeString(Listino9);
-        dest.writeString(codiceIvaVendite);
-        dest.writeString(PercentualeDiSconto1);
-        dest.writeString(PercentualeDiSconto2);
-        dest.writeString(PercentualeDiSconto3);
-        dest.writeString(alias);
-        dest.writeString(CodiceUnitàDiMisura1);
-        dest.writeString(CodiceUnitàDiMisura2);
-        dest.writeString(CodiceUnitàDiMisura3);
-        dest.writeString(FattorediConversione1);
-        dest.writeString(FattorediConversione2);
-        dest.writeString(FattorediConversione3);
     }
 
     public static class ArticleBuilder {

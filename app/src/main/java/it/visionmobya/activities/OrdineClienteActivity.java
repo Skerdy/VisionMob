@@ -1,7 +1,6 @@
 package it.visionmobya.activities;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
@@ -9,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -30,14 +30,18 @@ import it.visionmobya.models.Client;
 import it.visionmobya.models.DocumentCategory;
 import it.visionmobya.models.customModels.DocumentState;
 import it.visionmobya.utils.CodesUtil;
+import it.visionmobya.utils.FinanceHelper;
+import it.visionmobya.utils.PaginationUtil.DocumentNavigationListener;
+import it.visionmobya.utils.PaginationUtil.ListPagination;
+import it.visionmobya.utils.PaginationUtil.Paginatiable;
 import it.visionmobya.utils.TextViewHelper;
 
-public class OrdineClienteActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+public class OrdineClienteActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener , Paginatiable{
 
     //textview e meposhtem sherbejne si butona dhe jane te vendosur ne fudn te layout
     private TextView vedi_documentoTV, end_documentoTV, prev_documentoTV, new_documentoTV, next_documentoTV;
 
-    private TextView imponibileTV, ivaTV, prezzo_totaleTV, articolo_numeroTV;
+    private TextView imponibileTV, ivaTV, prezzo_totaleTV, articolo_numeroTV, bottom_document_type;
 
     private TextView cliente_nome_address_TV, cliente_telefoneTV, codice_pagamentoTV;
 
@@ -48,13 +52,13 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
     private ArrayList<DocumentState> documentStates;
     private FragmentTransaction fragmentTransaction;
     private OnNewRowListener onNewRowListener;
-    private int currentDocumentPosition = 0;
+    private int currentDocumentPosition;
     private String activityTitle;
     private Client selectedClient;
     private DocumentCategory documentCategory;
     private Date pickedDate;
-
-
+    private ListPagination<DocumentState> listPagination;
+    private DocumentNavigationListener documentNavigationListener;
 
 
     @Override
@@ -63,14 +67,12 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
         setContentView(R.layout.ordine_cliente);
         initUI();
         setupDatePicker();
-        documentStates = new ArrayList<>();
-        showArticleRowFragment(null, 1);
-        checkNavigationValidity();
+        initArticleFragmentAndDocumentStates();
     }
 
-    private void showArticleRowFragment(DocumentState documentState, int articoloNumero){
+    private void showArticleRowFragment(DocumentState documentState){
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        ArticleRowFragment articleRowFragment = ArticleRowFragment.newInstance(documentState, articoloNumero);
+        ArticleRowFragment articleRowFragment = ArticleRowFragment.newInstance(documentState);
         fragmentTransaction.addToBackStack("ArticleRowFragment");
         fragmentTransaction.replace(R.id.fragmentContainer, articleRowFragment, "ArticleRowFragment");
         fragmentTransaction.commitAllowingStateLoss();
@@ -106,6 +108,7 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
         codice_pagamentoTV = findViewById(R.id.codice_pagamento);
         next_documentoTV = findViewById(R.id.next_documento);
         top_title_type_counter = findViewById(R.id.title_ordine_cliente);
+        bottom_document_type = findViewById(R.id.bottom_document_type);
         //inicializimi i toolbarit
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -176,36 +179,65 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
         }
     }
 
-    //krijon nje dokument te ri dhe rrit counterin me 1
-    public void createNewDocument(DocumentState documentState) {
-      //si fillim ruajme gjendjen e artikullit tek document states
+    private void initArticleFragmentAndDocumentStates(){
+        documentStates = new ArrayList<>();
+        currentDocumentPosition = 0;
+        DocumentState documentState = new DocumentState();
+        //ky flag do behet true vetem brenda fragmentit ShowArticle pasi nje document state do behet bind pasi
+        //te kete kaluar filtrat e fushave jobosh qe kerkohen per te shkuar ne nje article dokument te ri
+        documentState.setBindDirectly(false);
+        documentState.setNumerArticolo(currentDocumentPosition+1);
         documentStates.add(documentState);
-        currentDocumentPosition = currentDocumentPosition+1;
-        showArticleRowFragment(null, documentState.getNumerArticolo()+1);
-        checkNavigationValidity();
+        showArticleRowFragment(documentState);
+
+        //bejme setup Paginatable Articles, basicly do beje invoke hide both next and previous
+        setupPaginatableArticles();
+        //bejme setup panelin bottom
+        setupBottomPanel();
     }
 
+    //krijon nje dokument te ri te njejten instance e fut tek arraylista dhe ia kalon mbrapsht fragmentit qe e ka thirrur
+    //duke realizuar opsionin save pasi kemi te bejme me te njejten reference objekti
+    public DocumentState createNewDocument(){
+        DocumentState documentState = new DocumentState();
+        currentDocumentPosition = currentDocumentPosition+1;
+        documentState.setBindDirectly(false);
+        documentState.setNumerArticolo(currentDocumentPosition+1);
+        documentStates.add(documentState);
+        showArticleRowFragment(documentState);
+        listPagination.invalidate(currentDocumentPosition);
+        return documentState;
+    }
+
+    //hap fragmentin article duke marre next document nga lista e dokumenteve
     private void nextDocument(){
+        if(documentNavigationListener!=null){
+            documentNavigationListener.onNavigationChanged();
+        }
         if(documentStates!=null && !documentStates.isEmpty()){
             if(currentDocumentPosition<documentStates.size()-1){
                 ++currentDocumentPosition;
-                showArticleRowFragment(documentStates.get(currentDocumentPosition), documentStates.get(currentDocumentPosition).getNumerArticolo());
+                showArticleRowFragment(documentStates.get(currentDocumentPosition));
             }
-
         }
-        checkNavigationValidity();
-
+        listPagination.invalidate(currentDocumentPosition);
     }
 
+
+    //hap fragmentin article duke marre previous document nga lista e dokumenteve
     private void previousDocument(){
+        if(documentNavigationListener!=null){
+            documentNavigationListener.onNavigationChanged();
+        }
         if(documentStates!=null && !documentStates.isEmpty()){
             if(currentDocumentPosition>0){
                 --currentDocumentPosition;
-                showArticleRowFragment(documentStates.get(currentDocumentPosition), documentStates.get(currentDocumentPosition).getNumerArticolo());
+                showArticleRowFragment(documentStates.get(currentDocumentPosition));
             }
 
         }
-        checkNavigationValidity();
+        listPagination.invalidate(currentDocumentPosition);
+        //checkNavigationValidity();
 
     }
 
@@ -231,10 +263,23 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
         }
     }
 
+    public void setupBottomPanel(){
+        bottom_document_type.setText(TextViewHelper.getOrderClientBottomDocumentType(documentCategory));
+        updateBottomCalculations();
+    }
 
     public void updateBottomCalculations(){
-
+      int documentsSize = documentStates.size();
+      articolo_numeroTV.setText("" + documentsSize);
+      Double[] values = FinanceHelper.calculateImponibileIvaTotale(documentStates);
+      imponibileTV.setText(values[0].toString());
+      ivaTV.setText(values[1].toString());
+      prezzo_totaleTV.setText(values[2].toString());
     }
+
+
+
+
 
     //metode qe thirret nga fragmenti i article row
     public void showDialog(){
@@ -247,7 +292,7 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
     }
 
     //metode qe thirret nga fragmenti i article row
-    public void setDialogAdapter(RecyclerView.Adapter adapter){
+    public void setDialogAdapter(RecyclerView.Adapter<it.visionmobya.recyclerView.viewholders.ArticleViewHolder> adapter){
         recyclerViewDialog.setAdapter(adapter);
     }
 
@@ -273,9 +318,6 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
                 setupActivityDocumentData(documentCategory);
                 this.documentCategory= documentCategory;
             }
-
-
-
 
         }
     }
@@ -330,7 +372,6 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
     }
 
 
-
     private void confirmBackNavigation(){
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this, R.style.AlertDialogBox);
         alertDialog.setTitle("Back Pressed");
@@ -348,7 +389,41 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
         alertDialog.show();
     }
 
+    private void setupPaginatableArticles(){
+       listPagination = new ListPagination<>(documentStates, this, currentDocumentPosition);
+    }
 
 
+    @Override
+    public void onFirstIndex() {
+        Log.d("Navigation" , "OnFirstIndex");
+        prev_documentoTV.setVisibility(View.INVISIBLE);
+        next_documentoTV.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onLastIndex() {
+        Log.d("Navigation" , "onLastIndex");
+        next_documentoTV.setVisibility(View.INVISIBLE);
+        prev_documentoTV.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showBoth() {
+        Log.d("Navigation" , "showBoth");
+        prev_documentoTV.setVisibility(View.VISIBLE);
+        next_documentoTV.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideBoth() {
+        Log.d("Navigation" , "hideBoth");
+        prev_documentoTV.setVisibility(View.INVISIBLE);
+        next_documentoTV.setVisibility(View.INVISIBLE);
+    }
+
+    public void setDocumentNavigationListener(DocumentNavigationListener documentNavigationListener) {
+        this.documentNavigationListener = documentNavigationListener;
+    }
 }
 

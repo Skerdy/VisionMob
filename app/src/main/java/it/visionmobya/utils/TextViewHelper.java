@@ -2,6 +2,7 @@ package it.visionmobya.utils;
 
 import it.visionmobya.models.Client;
 import it.visionmobya.models.DocumentCategory;
+import it.visionmobya.models.customModels.DocumentState;
 
 public class TextViewHelper {
 
@@ -33,6 +34,16 @@ public class TextViewHelper {
                 .append(client.getCAP().trim())
                 .append(" ").append(client.getCitta().trim()).append("(")
                 .append(client.getProvincia().trim()).append(")");
+        return stringBuilder.toString();
+    }
+
+
+    public static String getOrderClientBottomDocumentType(DocumentCategory documentCategory){
+        StringBuilder stringBuilder = new StringBuilder();
+        String documentCounter = "" + (Integer.parseInt(documentCategory.getConttatoreDocumento()) + 1);
+
+        stringBuilder.append(documentCategory.getDescrizioneDocumento().trim()).append(" N° ")
+                .append(documentCounter);
         return stringBuilder.toString();
     }
 }

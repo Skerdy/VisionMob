@@ -27,14 +27,15 @@ public class DocumentState implements Serializable, Parcelable {
     private Double prezzoUnitario;
     private Integer numerArticolo;
     private Double scontoPercentuale;
+    @Builder.Default
+    private boolean bindDirectly = false;
 
     public DocumentState(){
 
     }
 
-
-
     protected DocumentState(Parcel in) {
+        article = in.readParcelable(Article.class.getClassLoader());
         descrizione = in.readString();
         codiceIva = in.readString();
         if (in.readByte() == 0) {
@@ -72,6 +73,7 @@ public class DocumentState implements Serializable, Parcelable {
         } else {
             scontoPercentuale = in.readDouble();
         }
+        bindDirectly = in.readByte() != 0;
     }
 
     public static final Creator<DocumentState> CREATOR = new Creator<DocumentState>() {
@@ -92,50 +94,52 @@ public class DocumentState implements Serializable, Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(descrizione);
-        dest.writeString(codiceIva);
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeParcelable(article, i);
+        parcel.writeString(descrizione);
+        parcel.writeString(codiceIva);
         if (quantita == null) {
-            dest.writeByte((byte) 0);
+            parcel.writeByte((byte) 0);
         } else {
-            dest.writeByte((byte) 1);
-            dest.writeDouble(quantita);
+            parcel.writeByte((byte) 1);
+            parcel.writeDouble(quantita);
         }
         if (imponibile == null) {
-            dest.writeByte((byte) 0);
+            parcel.writeByte((byte) 0);
         } else {
-            dest.writeByte((byte) 1);
-            dest.writeDouble(imponibile);
+            parcel.writeByte((byte) 1);
+            parcel.writeDouble(imponibile);
         }
         if (scontoValue == null) {
-            dest.writeByte((byte) 0);
+            parcel.writeByte((byte) 0);
         } else {
-            dest.writeByte((byte) 1);
-            dest.writeDouble(scontoValue);
+            parcel.writeByte((byte) 1);
+            parcel.writeDouble(scontoValue);
         }
         if (prezzoTotaleArticle == null) {
-            dest.writeByte((byte) 0);
+            parcel.writeByte((byte) 0);
         } else {
-            dest.writeByte((byte) 1);
-            dest.writeDouble(prezzoTotaleArticle);
+            parcel.writeByte((byte) 1);
+            parcel.writeDouble(prezzoTotaleArticle);
         }
         if (prezzoUnitario == null) {
-            dest.writeByte((byte) 0);
+            parcel.writeByte((byte) 0);
         } else {
-            dest.writeByte((byte) 1);
-            dest.writeDouble(prezzoUnitario);
+            parcel.writeByte((byte) 1);
+            parcel.writeDouble(prezzoUnitario);
         }
         if (numerArticolo == null) {
-            dest.writeByte((byte) 0);
+            parcel.writeByte((byte) 0);
         } else {
-            dest.writeByte((byte) 1);
-            dest.writeInt(numerArticolo);
+            parcel.writeByte((byte) 1);
+            parcel.writeInt(numerArticolo);
         }
         if (scontoPercentuale == null) {
-            dest.writeByte((byte) 0);
+            parcel.writeByte((byte) 0);
         } else {
-            dest.writeByte((byte) 1);
-            dest.writeDouble(scontoPercentuale);
+            parcel.writeByte((byte) 1);
+            parcel.writeDouble(scontoPercentuale);
         }
+        parcel.writeByte((byte) (bindDirectly ? 1 : 0));
     }
 }
