@@ -46,7 +46,6 @@ public class ArticleRowsFragment extends Fragment {
             }
         }
         else {
-            eliglibleDocumentStates = new ArrayList<>();
             documentStates = new ArrayList<>();
         }
     }

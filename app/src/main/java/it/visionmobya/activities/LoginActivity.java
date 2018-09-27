@@ -54,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra(CodesUtil.NO_LOGIN, true);
             startActivity(intent);
+            finish();
         } else {
             visionFileManager = VisionFileManager.getInstance();
             if (mySharedPref.getStringFromSharedPref(CodesUtil.USER_NAME) != null) {

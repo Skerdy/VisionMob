@@ -169,22 +169,6 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
     }
 
 
-    private void calculateImponibile(){
-        if(prezzo_unitarioET.getText()!=null && prezzo_unitarioET.getText().toString()!=null && !prezzo_unitarioET.getText().toString().isEmpty()){
-            if(article_quantitaET.getText()!=null && article_quantitaET.getText().toString()!=null &&!article_quantitaET.getText().toString().isEmpty()){
-                Double prezzo_unitario = Double.valueOf(prezzo_unitarioET.getText().toString());
-                documentState.setPrezzoUnitario(prezzo_unitario);
-                Double quantita = Double.valueOf(article_quantitaET.getText().toString());
-                documentState.setQuantita(quantita);
-                Double sconto = Double.valueOf(sconto_valueTV.getText().toString().trim());
-                documentState.setScontoValue(sconto);
-                Double imponibile = prezzo_unitario*quantita-sconto;
-                documentState.setImponibile(imponibile);
-                this.imponibileTV.setText(imponibile.toString());
-            }
-        }
-    }
-
     private void calculateBrutoPrice(){
         readPrezzoUnitario();
         readQuantita();
@@ -193,11 +177,16 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
     }
 
     private void calculateImponibileValue(){
-        calculateBrutoPrice();
-        calculateScontoValue();
-        Double imponibile = this.brutoPrice - documentState.getScontoValue();
-        documentState.setImponibile(imponibile);
-        imponibileTV.setText(imponibile.toString());
+        if(article!=null) {
+            calculateBrutoPrice();
+            calculateScontoValue();
+            Double imponibile = this.brutoPrice - documentState.getScontoValue();
+            documentState.setImponibile(imponibile);
+            imponibileTV.setText(imponibile.toString());
+        }
+        else {
+            imponibileTV.setText("0.0");
+        }
     }
 
     //lexo prezzo unitario qe futet si input dhe ruaje ne document state
@@ -235,8 +224,11 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
 
     private Double calculateScontoValue(){
         Double scontoValue = 0.0;
-        scontoValue = this.brutoPrice*(documentState.getScontoPercentuale()/100);
-        documentState.setScontoValue(scontoValue);
+        if(article!=null) {
+            showScontoPercentuale();
+            scontoValue = this.brutoPrice * (documentState.getScontoPercentuale() / 100);
+            documentState.setScontoValue(scontoValue);
+        }
         sconto_valueTV.setText(scontoValue.toString());
         return scontoValue;
     }

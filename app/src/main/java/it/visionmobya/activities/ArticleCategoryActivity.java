@@ -15,13 +15,14 @@ import java.util.List;
 
 import it.visionmobya.CSVModule.VisionFileManager;
 import it.visionmobya.R;
+import it.visionmobya.listener.OnArticleCategoryClickListener;
 import it.visionmobya.listener.OnArticleClickListener;
 import it.visionmobya.models.Article;
 import it.visionmobya.models.ArticleCategory;
 import it.visionmobya.recyclerView.adapters.ArticleCategoryAdapter;
 import it.visionmobya.utils.CodesUtil;
 
-public class ArticleCategoryActivity extends AppCompatActivity implements OnArticleClickListener {
+public class ArticleCategoryActivity extends AppCompatActivity implements OnArticleCategoryClickListener {
     Toolbar toolbar;
     RecyclerView recyclerView;
     ArticleCategoryAdapter articleCategoryAdapter;
@@ -65,9 +66,9 @@ public class ArticleCategoryActivity extends AppCompatActivity implements OnArti
     }
 
     @Override
-    public void onArticleClicked(Article article, int position) {
+    public void onArticleCategoryClicked(ArticleCategory articleCategory, int position) {
         Intent intent = new Intent(this,ArticleActivity.class);
-        intent.putExtra(CodesUtil.ARTICLE_CATEGORY, articleCategories.get(position).getId());
+        intent.putExtra(CodesUtil.ARTICLE_CATEGORY, articleCategory.getId());
         startActivity(intent);
     }
 }

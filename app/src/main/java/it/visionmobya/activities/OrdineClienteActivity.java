@@ -170,7 +170,7 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if(getSupportFragmentManager().getBackStackEntryCount()==0){
+        if(getSupportFragmentManager().getBackStackEntryCount()<=1){
             confirmBackNavigation();
         }
         else {
@@ -236,30 +236,6 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
 
         }
         listPagination.invalidate(currentDocumentPosition);
-        //checkNavigationValidity();
-
-    }
-
-    private void checkNavigationValidity(){
-        //per momentin i bejme invisible butonat next dhe previous por ne te ardhmen do behen shadow
-        if(documentStates.size()<=1){
-            prev_documentoTV.setVisibility(View.INVISIBLE);
-            next_documentoTV.setVisibility(View.INVISIBLE);
-        }
-        //perndryshe kontrollojme rastet skaje
-        else {
-            if (currentDocumentPosition == 0 && documentStates.size()>1) {
-                prev_documentoTV.setVisibility(View.INVISIBLE);
-
-            } else {
-                prev_documentoTV.setVisibility(View.VISIBLE);
-            }
-            if (currentDocumentPosition > documentStates.size()-1) {
-                next_documentoTV.setVisibility(View.INVISIBLE);
-            } else {
-                next_documentoTV.setVisibility(View.VISIBLE);
-            }
-        }
     }
 
     public void setupBottomPanel(){

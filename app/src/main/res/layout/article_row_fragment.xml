@@ -49,8 +49,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:textColor="#67c906"
-                android:text="____________"/>
+                android:textColor="#67c906" />
 
             <LinearLayout
                 android:id="@+id/select_article"
@@ -105,7 +104,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:textColor="#67c906"
-                android:text="__________"
+
                 android:layout_height="wrap_content" />
             </LinearLayout>
 
@@ -176,7 +175,6 @@
                     android:layout_width="0dp"
                     android:textColor="#67c906"
                     android:layout_weight="076"
-                    android:text="______"
                     android:layout_height="match_parent" />
             </LinearLayout>
 
@@ -198,7 +196,6 @@
                     android:id="@+id/codice_iva"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:text= "__"
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
@@ -266,7 +263,6 @@
                     android:id="@+id/sconto_percentuale"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:text= "22"
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
@@ -300,7 +296,6 @@
                     android:id="@+id/imponibile"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="________"
                     android:layout_weight="1"/>
 
             </LinearLayout>
@@ -323,7 +318,6 @@
                     android:id="@+id/sconto_value"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:text= "10"
                     android:layout_height="wrap_content" />
             </LinearLayout>
 

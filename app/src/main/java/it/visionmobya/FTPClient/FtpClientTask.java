@@ -17,6 +17,7 @@ import java.io.OutputStream;
 
 import it.visionmobya.CSVModule.VisionFileManager;
 import it.visionmobya.Interface.ProgressBarMessage;
+import it.visionmobya.activities.LoginActivity;
 import it.visionmobya.activities.MainActivity;
 import it.visionmobya.R;
 import it.visionmobya.models.customModels.FtpResponse;
@@ -107,6 +108,7 @@ public class FtpClientTask extends AsyncTask<ServerRequest, String, FtpResponse>
         if(ftpResponse.getResponseCode()==FtpResponse.STATUS_OK){
             Intent intent = new Intent(serverRequest.getContext(), MainActivity.class);
             serverRequest.getContext().startActivity(intent);
+            ((LoginActivity)serverRequest.getContext()).finish();
         }
         else {
             final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context, R.style.AlertDialogBox);
