@@ -6,10 +6,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import java.text.DecimalFormat;
+
 public class Utils {
 
     public static final String IMPORT= "import";
     public static final String EXPORT = "export";
+
 
 
     public static void hideKeyboardFrom(Context context, View view) {
@@ -24,4 +27,10 @@ public class Utils {
         Log.d("directory " , " dir : " + stringBuilder.toString());
         return stringBuilder.toString();
     }
+
+    public static String doubleToSringFormat(Double doubleVal){
+        DecimalFormat decimalFormat = new DecimalFormat("##.##");
+        return decimalFormat.format(doubleVal);
+    }
+
 }

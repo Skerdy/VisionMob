@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import org.apache.commons.net.io.Util;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ import it.visionmobya.utils.PaginationUtil.DocumentNavigationListener;
 import it.visionmobya.utils.PaginationUtil.ListPagination;
 import it.visionmobya.utils.PaginationUtil.Paginatiable;
 import it.visionmobya.utils.TextViewHelper;
+import it.visionmobya.utils.Utils;
 
 public class OrdineClienteActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener , Paginatiable{
 
@@ -204,7 +207,12 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
         documentState.setNumerArticolo(currentDocumentPosition+1);
         documentStates.add(documentState);
         showArticleRowFragment(documentState);
+
+        //bej update bottom calculations per articles list size
+        updateBottomCalculations();
+
         listPagination.invalidate(currentDocumentPosition);
+
         return documentState;
     }
 
@@ -247,9 +255,9 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
       int documentsSize = documentStates.size();
       articolo_numeroTV.setText("" + documentsSize);
       Double[] values = FinanceHelper.calculateImponibileIvaTotale(documentStates);
-      imponibileTV.setText(values[0].toString());
-      ivaTV.setText(values[1].toString());
-      prezzo_totaleTV.setText(values[2].toString());
+      imponibileTV.setText(Utils.doubleToSringFormat(values[0]));
+      ivaTV.setText(Utils.doubleToSringFormat(values[1]));
+      prezzo_totaleTV.setText(Utils.doubleToSringFormat(values[2]));
     }
 
 

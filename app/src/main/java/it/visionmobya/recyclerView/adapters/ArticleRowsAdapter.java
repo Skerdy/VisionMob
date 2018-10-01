@@ -33,7 +33,7 @@ public class ArticleRowsAdapter extends RecyclerView.Adapter<ArticleRowsViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ArticleRowsViewHolder holder, int position) {
-        if(documentStates.get(position).isBindDirectly()) {
+        if(documentStates.get(position).isBindDirectly() && documentStates.get(position).getArticle()!=null) {
             holder.articleName.setText(documentStates.get(position).getArticle().getDescrizione());
             holder.codeArticolo.setText(documentStates.get(position).getArticle().getCodiceArticolo());
             holder.unitMeasure.setText(documentStates.get(position).getArticle().getCodiceUnitaDiMisura());

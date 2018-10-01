@@ -19,7 +19,6 @@ public class DocumentState implements Serializable, Parcelable {
 
     private Article article;
     private String descrizione;
-    private String codiceIva;
     private Double quantita;
     private Double imponibile;
     private Double scontoValue;
@@ -27,6 +26,7 @@ public class DocumentState implements Serializable, Parcelable {
     private Double prezzoUnitario;
     private Integer numerArticolo;
     private Double scontoPercentuale;
+    private Double ivaValueUponPrice;
     @Builder.Default
     private boolean bindDirectly = false;
 
@@ -37,7 +37,6 @@ public class DocumentState implements Serializable, Parcelable {
     protected DocumentState(Parcel in) {
         article = in.readParcelable(Article.class.getClassLoader());
         descrizione = in.readString();
-        codiceIva = in.readString();
         if (in.readByte() == 0) {
             quantita = null;
         } else {
@@ -73,6 +72,11 @@ public class DocumentState implements Serializable, Parcelable {
         } else {
             scontoPercentuale = in.readDouble();
         }
+        if (in.readByte() == 0) {
+            ivaValueUponPrice = null;
+        } else {
+            ivaValueUponPrice = in.readDouble();
+        }
         bindDirectly = in.readByte() != 0;
     }
 
@@ -97,7 +101,6 @@ public class DocumentState implements Serializable, Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeParcelable(article, i);
         parcel.writeString(descrizione);
-        parcel.writeString(codiceIva);
         if (quantita == null) {
             parcel.writeByte((byte) 0);
         } else {
@@ -139,6 +142,12 @@ public class DocumentState implements Serializable, Parcelable {
         } else {
             parcel.writeByte((byte) 1);
             parcel.writeDouble(scontoPercentuale);
+        }
+        if (ivaValueUponPrice == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeDouble(ivaValueUponPrice);
         }
         parcel.writeByte((byte) (bindDirectly ? 1 : 0));
     }

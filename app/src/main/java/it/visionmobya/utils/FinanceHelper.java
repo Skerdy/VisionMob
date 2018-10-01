@@ -12,8 +12,20 @@ public class FinanceHelper {
         Double iva = 0.0;
         Double totale = 0.0;
 
+        for(DocumentState documentState : documentStates){
 
+                if(documentState.getImponibile()!=null) {
+                    imponibile += documentState.getImponibile();
+                }
+                if(documentState.getIvaValueUponPrice()!=null){
+                    iva += documentState.getIvaValueUponPrice();
 
+                }
+                if(documentState.getPrezzoTotaleArticle()!=null){
+                    totale += documentState.getPrezzoTotaleArticle();
+                }
+
+        }
         //pas modifikimit kthejme nje array me doubles mbrapsht
        return returnArrayFromValues(imponibile, iva, totale);
     }

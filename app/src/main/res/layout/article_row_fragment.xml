@@ -361,7 +361,7 @@
                 android:textSize="15sp"
                 android:textStyle="italic"
                 android:textColor="#67c906"
-                android:text="139072.45"/>
+                android:text="0.0"/>
         </LinearLayout>
 
 

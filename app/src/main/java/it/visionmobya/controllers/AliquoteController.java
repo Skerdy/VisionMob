@@ -1,5 +1,7 @@
 package it.visionmobya.controllers;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,7 @@ public class AliquoteController {
     public static Vat getVatWithId(String id){
         if(VisionFileManager.getInstance().getArticles()!=null) {
             for (Vat vat : VisionFileManager.getInstance().getVats()) {
+                Log.d("SkerdiIVA" , " Iva id : "+ vat.getCodiceIva()  +  " input Id = " + id);
                 if (vat.getCodiceIva().equals(id))
                     return vat;
             }

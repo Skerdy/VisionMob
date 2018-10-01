@@ -76,6 +76,8 @@ public class VisionFileManager {
             progressBarMessage.onLoadFile("Caricamento di docana...");
             this.documentCategories = getAllDocumentCategories();
 
+            transformObjectsWithCommaFields("|");
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -236,6 +238,40 @@ public class VisionFileManager {
     private List<Lotti> getAllLotties() throws IOException {
         return getLottiFromRecords(getRecordsForParser(getParserForFile(TextFiles.LOTTI)));
     }
+
+
+    public void transformObjectsWithCommaFields(String specialChar){
+        transformArticlesWithCommaFields(specialChar);
+        transformClientsWithCommaFields(specialChar);
+    }
+
+
+    private void transformArticlesWithCommaFields(String specialChar){
+        for(Article article : this.articles){
+            article.setDescrizione(article.getDescrizione().replace(specialChar , ","));
+            article.setCodiceArticolo(article.getCodiceArticolo().replace(specialChar, ","));
+            article.setCodiceUnitaDiMisura( article.getCodiceUnitaDiMisura().replace(specialChar,","));
+            article.setCodiceCategoria(article.getCodiceCategoria().replace(specialChar,","));
+            article.setListino1(article.getListino1().replace(specialChar,","));
+            article.setListino2(article.getListino2().replace(specialChar,","));
+            article.setListino3(article.getListino3().replace(specialChar,","));
+            article.setListino4(article.getListino4().replace(specialChar,","));
+            article.setListino5(article.getListino5().replace(specialChar,","));
+            article.setListino6(article.getListino6().replace(specialChar,","));
+            article.setListino7(article.getListino7().replace(specialChar,","));
+            article.setListino8(article.getListino8().replace(specialChar,","));
+            article.setListino9(article.getListino9().replace(specialChar,","));
+        }
+    }
+
+    private void transformClientsWithCommaFields(String specialChar){
+        for(Client client : this.clients){
+            client.setCodiceCliente(client.getCodiceCliente().replace(specialChar,","));
+            client.setIndirizzo(client.getIndirizzo().replace(specialChar,","));
+        }
+    }
+
+
 
 
 
