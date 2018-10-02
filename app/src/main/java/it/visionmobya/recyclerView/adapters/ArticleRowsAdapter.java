@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import it.visionmobya.R;
+import it.visionmobya.activities.OrdineClienteActivity;
 import it.visionmobya.models.customModels.DocumentState;
 import it.visionmobya.recyclerView.viewholders.ArticleRowsViewHolder;
 
@@ -32,7 +33,7 @@ public class ArticleRowsAdapter extends RecyclerView.Adapter<ArticleRowsViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ArticleRowsViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ArticleRowsViewHolder holder, final int position) {
         if(documentStates.get(position).isBindDirectly() && documentStates.get(position).getArticle()!=null) {
             holder.articleName.setText(documentStates.get(position).getArticle().getDescrizione());
             holder.codeArticolo.setText(documentStates.get(position).getArticle().getCodiceArticolo());
@@ -41,6 +42,31 @@ public class ArticleRowsAdapter extends RecyclerView.Adapter<ArticleRowsViewHold
             holder.totalFinal.setText(documentStates.get(position).getPrezzoTotaleArticle().toString());
             holder.rowNr.setText("" + (position + 1));
         }
+
+        holder.root_layout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                ((OrdineClienteActivity)context).showArticleDetailsDialog(documentStates.get(position));
+                return true;
+            }
+        });
+
+        holder.root_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((OrdineClienteActivity)context).showParticularArticleRowFragment(position);
+            }
+        });
+
+        holder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                 documentStates.remove(position);
+                ((OrdineClienteActivity)context).deleteParticularArticleRowFragment(position);
+
+                notifyDataSetChanged();
+            }
+        });
 
     }
 

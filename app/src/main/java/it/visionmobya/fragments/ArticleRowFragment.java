@@ -60,6 +60,7 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("FragNav", "Article Row on Create , savedInstanceState null = " +(savedInstanceState==null));
         //sa here qe hapet nej fragment row i ri regjistrojme on new row listener tek aktiviteti ordine cliente
         ((OrdineClienteActivity)getActivity()).setOnNewRowListener(this);
         ((OrdineClienteActivity)getActivity()).setDocumentNavigationListener(this);
@@ -73,6 +74,7 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d("FragNav", "Article Row on onCreateView , savedInstanceState null = " +(savedInstanceState==null));
         View view = inflater.inflate(R.layout.article_row_fragment, container, false);
         //bejme inicializimin e gjithe komponenteve te deklaruara ne drawing time dhe i perdorim pasi behet draw ne onviewcreated
         initUI(view);
@@ -82,6 +84,7 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.d("FragNav", "Article Row on onViewCreated , savedInstanceState null = " +(savedInstanceState==null));
 
         //nese document state nuk eshte null atehere fillo mbush tere komponentet me te dhenat e ruajtura perkatesisht
         if(documentState.isBindDirectly() && documentState.getArticle()!=null)
@@ -91,6 +94,13 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
             this.articolo_numero_bottomTV.setText(""+ articolo_numero);
         }
 
+    }
+
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d("FragNav", "Article Row on onSaveInstanceState , outState null = " +(outState==null));
     }
 
     private void bindDocumentStateWithUI(DocumentState documentState){

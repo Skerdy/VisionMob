@@ -19,8 +19,8 @@ import it.visionmobya.recyclerView.adapters.ArticleRowsAdapter;
 public class ArticleRowsFragment extends Fragment {
 
     public static final String FRAGMENT_ARGUMENTS = "articleAllRowsFragmentArguments";
-    RecyclerView recyclerView;
-    ArticleRowsAdapter articleRowsAdapter;
+    private RecyclerView recyclerView;
+    private ArticleRowsAdapter articleRowsAdapter;
     private ArrayList<DocumentState> documentStates;
     private ArrayList<DocumentState> eliglibleDocumentStates;
 

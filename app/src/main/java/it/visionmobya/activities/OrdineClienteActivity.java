@@ -23,6 +23,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import it.visionmobya.R;
+import it.visionmobya.fragments.ArticleDetailsDialog;
 import it.visionmobya.fragments.ArticleRowFragment;
 import it.visionmobya.fragments.ArticleRowsFragment;
 import it.visionmobya.fragments.CloserDocumentFragment;
@@ -51,6 +52,7 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
     private TextView top_title_type_counter;
 
     private RecyclerViewDialog recyclerViewDialog;
+    private ArticleDetailsDialog articleDetailsDialog;
     private Toolbar toolbar;
     private ArrayList<DocumentState> documentStates;
     private FragmentTransaction fragmentTransaction;
@@ -73,12 +75,25 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
         initArticleFragmentAndDocumentStates();
     }
 
-    private void showArticleRowFragment(DocumentState documentState){
+    private void showArticleRowFragment(DocumentState documentState, boolean addToBackStack){
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         ArticleRowFragment articleRowFragment = ArticleRowFragment.newInstance(documentState);
-        fragmentTransaction.addToBackStack("ArticleRowFragment");
+
+        if(addToBackStack) {
+            fragmentTransaction.addToBackStack("ArticleRowFragment");
+        }
+
         fragmentTransaction.replace(R.id.fragmentContainer, articleRowFragment, "ArticleRowFragment");
         fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    public void showParticularArticleRowFragment(int position){
+        currentDocumentPosition = position;
+        showArticleRowFragment(documentStates.get(currentDocumentPosition), false);
+    }
+
+    public void deleteParticularArticleRowFragment(int position){
+        currentDocumentPosition=0;
     }
 
     private void showArticleRowsFragment(ArrayList<DocumentState> documentState){
@@ -142,6 +157,7 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
 
         //inicializimi i dialogut
         recyclerViewDialog = new RecyclerViewDialog(this);
+        articleDetailsDialog = new ArticleDetailsDialog(this);
 
         new_documentoTV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,7 +206,7 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
         documentState.setBindDirectly(false);
         documentState.setNumerArticolo(currentDocumentPosition+1);
         documentStates.add(documentState);
-        showArticleRowFragment(documentState);
+        showArticleRowFragment(documentState, true);
 
         //bejme setup Paginatable Articles, basicly do beje invoke hide both next and previous
         setupPaginatableArticles();
@@ -206,7 +222,7 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
         documentState.setBindDirectly(false);
         documentState.setNumerArticolo(currentDocumentPosition+1);
         documentStates.add(documentState);
-        showArticleRowFragment(documentState);
+        showArticleRowFragment(documentState, true);
 
         //bej update bottom calculations per articles list size
         updateBottomCalculations();
@@ -224,7 +240,7 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
         if(documentStates!=null && !documentStates.isEmpty()){
             if(currentDocumentPosition<documentStates.size()-1){
                 ++currentDocumentPosition;
-                showArticleRowFragment(documentStates.get(currentDocumentPosition));
+                showArticleRowFragment(documentStates.get(currentDocumentPosition), false);
             }
         }
         listPagination.invalidate(currentDocumentPosition);
@@ -239,7 +255,7 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
         if(documentStates!=null && !documentStates.isEmpty()){
             if(currentDocumentPosition>0){
                 --currentDocumentPosition;
-                showArticleRowFragment(documentStates.get(currentDocumentPosition));
+                showArticleRowFragment(documentStates.get(currentDocumentPosition), false);
             }
 
         }
@@ -277,6 +293,16 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
     //metode qe thirret nga fragmenti i article row
     public void setDialogAdapter(RecyclerView.Adapter<it.visionmobya.recyclerView.viewholders.ArticleViewHolder> adapter){
         recyclerViewDialog.setAdapter(adapter);
+    }
+
+
+    public void showArticleDetailsDialog(DocumentState documentState){
+        articleDetailsDialog.setDocumentState(documentState);
+        articleDetailsDialog.show();
+    }
+
+    public void hideArticleDetailsDialog(){
+        articleDetailsDialog.hide();
     }
 
     public void setOnNewRowListener(OnNewRowListener onNewRowListener) {
