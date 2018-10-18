@@ -16,11 +16,18 @@ import it.visionmobya.recyclerView.viewholders.ArticleRowsViewHolder;
 
 public class ArticleRowsAdapter extends RecyclerView.Adapter<ArticleRowsViewHolder> {
 
-    private ArrayList<DocumentState>documentStates;
+    private ArrayList<DocumentState> documentStates;
+    private ArrayList<DocumentState> eligibleDocumentStates;
     private Context context;
 
     public ArticleRowsAdapter(ArrayList<DocumentState> documentStates, Context context) {
         this.documentStates = documentStates;
+        this.eligibleDocumentStates = new ArrayList<>();
+        for(DocumentState documentState : documentStates){
+            if( documentState.isBindDirectly() && documentState.getArticle()!=null){
+                eligibleDocumentStates.add(documentState);
+            }
+        }
         this.context = context;
     }
 
@@ -34,19 +41,17 @@ public class ArticleRowsAdapter extends RecyclerView.Adapter<ArticleRowsViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ArticleRowsViewHolder holder, final int position) {
-        if(documentStates.get(position).isBindDirectly() && documentStates.get(position).getArticle()!=null) {
-            holder.articleName.setText(documentStates.get(position).getArticle().getDescrizione());
-            holder.codeArticolo.setText(documentStates.get(position).getArticle().getCodiceArticolo());
-            holder.unitMeasure.setText(documentStates.get(position).getArticle().getCodiceUnitaDiMisura());
-            holder.quantita.setText(documentStates.get(position).getQuantita().toString());
-            holder.totalFinal.setText(documentStates.get(position).getPrezzoTotaleArticle().toString());
+            holder.articleName.setText(eligibleDocumentStates.get(position).getArticle().getDescrizione());
+            holder.codeArticolo.setText(eligibleDocumentStates.get(position).getArticle().getCodiceArticolo());
+            holder.unitMeasure.setText(eligibleDocumentStates.get(position).getArticle().getCodiceUnitaDiMisura());
+            holder.quantita.setText(eligibleDocumentStates.get(position).getQuantita().toString());
+            holder.totalFinal.setText(eligibleDocumentStates.get(position).getPrezzoTotaleArticle().toString());
             holder.rowNr.setText("" + (position + 1));
-        }
 
         holder.root_layout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                ((OrdineClienteActivity)context).showArticleDetailsDialog(documentStates.get(position));
+                ((OrdineClienteActivity)context).showArticleDetailsDialog(eligibleDocumentStates.get(position));
                 return true;
             }
         });
@@ -61,9 +66,8 @@ public class ArticleRowsAdapter extends RecyclerView.Adapter<ArticleRowsViewHold
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                 documentStates.remove(position);
+                eligibleDocumentStates.remove(position);
                 ((OrdineClienteActivity)context).deleteParticularArticleRowFragment(position);
-
                 notifyDataSetChanged();
             }
         });
@@ -72,6 +76,6 @@ public class ArticleRowsAdapter extends RecyclerView.Adapter<ArticleRowsViewHold
 
     @Override
     public int getItemCount() {
-        return documentStates.size();
+        return eligibleDocumentStates.size();
     }
 }

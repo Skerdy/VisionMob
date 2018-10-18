@@ -3,6 +3,7 @@ package it.visionmobya.activities;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
@@ -43,13 +45,15 @@ import it.visionmobya.utils.Utils;
 public class OrdineClienteActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener , Paginatiable{
 
     //textview e meposhtem sherbejne si butona dhe jane te vendosur ne fudn te layout
-    private TextView vedi_documentoTV, end_documentoTV, prev_documentoTV, new_documentoTV, next_documentoTV;
+    private TextView vedi_documentoTV, end_documentoTV, prev_documentoTV, new_documentoTV, next_documentoTV, save_and_print;
 
     private TextView imponibileTV, ivaTV, prezzo_totaleTV, articolo_numeroTV, bottom_document_type;
 
     private TextView cliente_nome_address_TV, cliente_telefoneTV, codice_pagamentoTV;
 
     private TextView top_title_type_counter;
+
+    private LinearLayout four_buttons_layout;
 
     private RecyclerViewDialog recyclerViewDialog;
     private ArticleDetailsDialog articleDetailsDialog;
@@ -81,36 +85,59 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
 
         if(addToBackStack) {
             fragmentTransaction.addToBackStack("ArticleRowFragment");
+            if(fragmentTransaction.isAddToBackStackAllowed()) {
+                Log.d("BackStack", "U be add ne backstack Article Row");
+            }
         }
 
-        fragmentTransaction.replace(R.id.fragmentContainer, articleRowFragment, "ArticleRowFragment");
-        fragmentTransaction.commitAllowingStateLoss();
+        fragmentTransaction.replace(R.id.fragmentContainer, articleRowFragment, "ArticleRowFragment" + documentState.getNumerArticolo());
+        fragmentTransaction.commit();
+        getSupportFragmentManager().executePendingTransactions();
+        Log.d("BackStack", " Count = " + getSupportFragmentManager().getFragments().size() );
     }
 
     public void showParticularArticleRowFragment(int position){
         currentDocumentPosition = position;
+        listPagination.invalidate(currentDocumentPosition);
         showArticleRowFragment(documentStates.get(currentDocumentPosition), false);
     }
 
     public void deleteParticularArticleRowFragment(int position){
-        currentDocumentPosition=0;
+        documentStates.remove(position);
+        currentDocumentPosition = documentStates.size()-1;
+        listPagination.invalidate(currentDocumentPosition);
+        getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag("ArticleRowFragment" + (position+1)));
+
     }
 
     private void showArticleRowsFragment(ArrayList<DocumentState> documentState){
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         ArticleRowsFragment articleRowsFragment = ArticleRowsFragment.newInstance(documentState);
         fragmentTransaction.addToBackStack("ArticleRowsFragment");
-        currentDocumentPosition = 0;
+        if(fragmentTransaction.isAddToBackStackAllowed()) {
+            Log.d("BackStack", "U be add ne backstack Article Rows");
+        }
         fragmentTransaction.replace(R.id.fragmentContainer, articleRowsFragment, "ArticleRowsFragment");
-        fragmentTransaction.commitAllowingStateLoss();
+        fragmentTransaction.commit();
+        getSupportFragmentManager().executePendingTransactions();
+        Log.d("BackStack", " Count = " + getSupportFragmentManager().getFragments().size() );
     }
 
-    private void showCloserDocumento(){
+    private void showCloseDocumento(){
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         CloserDocumentFragment closerDocumentFragment = new CloserDocumentFragment();
-        fragmentTransaction.addToBackStack("closerDocumentFragment");
-        fragmentTransaction.replace(R.id.fragmentContainer, closerDocumentFragment, "closerDocumentFragment");
-        fragmentTransaction.commitAllowingStateLoss();
+        fragmentTransaction.addToBackStack("CloseDocumentFragment");
+        if(fragmentTransaction.isAddToBackStackAllowed()){
+            Log.d("BackStack", "U be add ne backstack Article CloseDocumentFragment");
+        }
+
+
+
+        fragmentTransaction.replace(R.id.fragmentContainer, closerDocumentFragment, "CloseDocumentFragment");
+        fragmentTransaction.commit();
+        getSupportFragmentManager().executePendingTransactions();
+        Log.d("BackStack", " Count = " + getSupportFragmentManager().getFragments().size() );
+        showPrintAndSaveButton();
     }
 
     private void initUI(){
@@ -128,6 +155,10 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
         next_documentoTV = findViewById(R.id.next_documento);
         top_title_type_counter = findViewById(R.id.title_ordine_cliente);
         bottom_document_type = findViewById(R.id.bottom_document_type);
+
+        save_and_print = findViewById(R.id.save_and_print);
+        four_buttons_layout = findViewById(R.id.four_buttons_layout);
+
         //inicializimi i toolbarit
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -176,7 +207,7 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
         end_documentoTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showCloserDocumento();
+                showCloseDocumento();
             }
         });
 
@@ -188,13 +219,34 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        Log.d("BackStack", " BackStack Count = " + getSupportFragmentManager().getBackStackEntryCount() );
         if(getSupportFragmentManager().getBackStackEntryCount()<=1){
             confirmBackNavigation();
         }
-        else {
+          else {
+                   /* if(getSupportFragmentManager().getFragments().size()>=2 && getSupportFragmentManager().getFragments().get(getSupportFragmentManager().getBackStackEntryCount()-1) instanceof ArticleRowsFragment
+                            && getSupportFragmentManager().getFragments().get(getSupportFragmentManager().getBackStackEntryCount()-2) instanceof ArticleRowFragment ){
+                        currentDocumentPosition = 0;
+                        listPagination.invalidate(currentDocumentPosition);
+                        ((ArticleRowFragment)getSupportFragmentManager().getFragments().get(getSupportFragmentManager().getBackStackEntryCount()-2)).reBindDataAfterBackPressedWithFirstDocumentRow(documentStates.get(currentDocumentPosition));
+                    }*/
+
+                   if(getSupportFragmentManager().findFragmentByTag("CloseDocumentFragment")!=null && getSupportFragmentManager().findFragmentByTag("CloseDocumentFragment").isVisible()){
+                       resetBottomButtons();
+                   }
+
                 getSupportFragmentManager().popBackStack();
         }
+    }
+
+    private void showPrintAndSaveButton(){
+      this.four_buttons_layout.setVisibility(View.GONE);
+        this.save_and_print.setVisibility(View.VISIBLE);
+    }
+
+    private void resetBottomButtons(){
+        this.four_buttons_layout.setVisibility(View.VISIBLE);
+        this.save_and_print.setVisibility(View.GONE);
     }
 
     private void initArticleFragmentAndDocumentStates(){
@@ -222,7 +274,7 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
         documentState.setBindDirectly(false);
         documentState.setNumerArticolo(currentDocumentPosition+1);
         documentStates.add(documentState);
-        showArticleRowFragment(documentState, true);
+        showArticleRowFragment(documentState, false);
 
         //bej update bottom calculations per articles list size
         updateBottomCalculations();
@@ -275,9 +327,6 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
       ivaTV.setText(Utils.doubleToSringFormat(values[1]));
       prezzo_totaleTV.setText(Utils.doubleToSringFormat(values[2]));
     }
-
-
-
 
 
     //metode qe thirret nga fragmenti i article row
@@ -408,6 +457,13 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
         Log.d("Navigation" , "OnFirstIndex");
         prev_documentoTV.setVisibility(View.INVISIBLE);
         next_documentoTV.setVisibility(View.VISIBLE);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("BackStack", "Resume Count = " + getSupportFragmentManager().getFragments().size() );
     }
 
     @Override

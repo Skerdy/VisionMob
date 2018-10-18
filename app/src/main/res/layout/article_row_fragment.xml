@@ -141,7 +141,7 @@
                 android:background="@color/white"
                 android:focusableInTouchMode="true"
                 android:gravity="start"
-                android:hint="Descrizione..."
+                android:hint="Note..."
                 android:maxLines="10"
                 android:textColor="#494949"
                 android:textSize="14sp" />

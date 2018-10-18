@@ -80,6 +80,66 @@ public class DocumentState implements Serializable, Parcelable {
         bindDirectly = in.readByte() != 0;
     }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(article, flags);
+        dest.writeString(descrizione);
+        if (quantita == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(quantita);
+        }
+        if (imponibile == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(imponibile);
+        }
+        if (scontoValue == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(scontoValue);
+        }
+        if (prezzoTotaleArticle == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(prezzoTotaleArticle);
+        }
+        if (prezzoUnitario == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(prezzoUnitario);
+        }
+        if (numerArticolo == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(numerArticolo);
+        }
+        if (scontoPercentuale == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(scontoPercentuale);
+        }
+        if (ivaValueUponPrice == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeDouble(ivaValueUponPrice);
+        }
+        dest.writeByte((byte) (bindDirectly ? 1 : 0));
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
     public static final Creator<DocumentState> CREATOR = new Creator<DocumentState>() {
         @Override
         public DocumentState createFromParcel(Parcel in) {
@@ -91,64 +151,4 @@ public class DocumentState implements Serializable, Parcelable {
             return new DocumentState[size];
         }
     };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeParcelable(article, i);
-        parcel.writeString(descrizione);
-        if (quantita == null) {
-            parcel.writeByte((byte) 0);
-        } else {
-            parcel.writeByte((byte) 1);
-            parcel.writeDouble(quantita);
-        }
-        if (imponibile == null) {
-            parcel.writeByte((byte) 0);
-        } else {
-            parcel.writeByte((byte) 1);
-            parcel.writeDouble(imponibile);
-        }
-        if (scontoValue == null) {
-            parcel.writeByte((byte) 0);
-        } else {
-            parcel.writeByte((byte) 1);
-            parcel.writeDouble(scontoValue);
-        }
-        if (prezzoTotaleArticle == null) {
-            parcel.writeByte((byte) 0);
-        } else {
-            parcel.writeByte((byte) 1);
-            parcel.writeDouble(prezzoTotaleArticle);
-        }
-        if (prezzoUnitario == null) {
-            parcel.writeByte((byte) 0);
-        } else {
-            parcel.writeByte((byte) 1);
-            parcel.writeDouble(prezzoUnitario);
-        }
-        if (numerArticolo == null) {
-            parcel.writeByte((byte) 0);
-        } else {
-            parcel.writeByte((byte) 1);
-            parcel.writeInt(numerArticolo);
-        }
-        if (scontoPercentuale == null) {
-            parcel.writeByte((byte) 0);
-        } else {
-            parcel.writeByte((byte) 1);
-            parcel.writeDouble(scontoPercentuale);
-        }
-        if (ivaValueUponPrice == null) {
-            parcel.writeByte((byte) 0);
-        } else {
-            parcel.writeByte((byte) 1);
-            parcel.writeDouble(ivaValueUponPrice);
-        }
-        parcel.writeByte((byte) (bindDirectly ? 1 : 0));
-    }
 }

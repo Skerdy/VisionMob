@@ -33,6 +33,7 @@ import it.visionmobya.models.customModels.DocumentState;
 import it.visionmobya.recyclerView.adapters.ArticleAdapter;
 import it.visionmobya.utils.DocumentStateHelper;
 import it.visionmobya.utils.PaginationUtil.DocumentNavigationListener;
+import it.visionmobya.utils.PaginationUtil.EditTextHelper;
 import it.visionmobya.utils.Utils;
 
 public class ArticleRowFragment extends Fragment  implements OnArticleClickListener, View.OnClickListener, OnNewRowListener , DocumentNavigationListener, OnUpdateDocumentStateListener {
@@ -87,9 +88,13 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
         Log.d("FragNav", "Article Row on onViewCreated , savedInstanceState null = " +(savedInstanceState==null));
 
         //nese document state nuk eshte null atehere fillo mbush tere komponentet me te dhenat e ruajtura perkatesisht
-        if(documentState.isBindDirectly() && documentState.getArticle()!=null)
-        bindDocumentStateWithUI(documentState);
+        if(documentState.isBindDirectly() && documentState.getArticle()!=null) {
+            bindDocumentStateWithUI(documentState);
+            Log.d("SkerdiTask", "U be bind dokument state me numer :" +documentState.getNumerArticolo());
+
+        }
         else{
+            Log.d("SkerdiTask", "Nuk U be bind dokument state me numer :" +documentState.getNumerArticolo() + " sepse isBindDirectly = " + documentState.isBindDirectly() + " dhe article eshte null ? " + (documentState.getArticle()==null));
             this.numero_articoloTV.setText("" + articolo_numero);
             this.articolo_numero_bottomTV.setText(""+ articolo_numero);
         }
@@ -146,7 +151,6 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
         article_quantitaET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
@@ -169,7 +173,6 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
         prezzo_unitarioET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
@@ -177,7 +180,6 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
                 Log.d("SkerdiText" , "On Text Changed :  Editable = " +charSequence.toString());
                 //shtojme prezzo unitario tek document state
                 readPrezzoUnitario();
-
                 if(!article_quantitaET.getText().toString().trim().isEmpty() && documentState.getArticle()!=null){
                     onUpdateDocumentStateListener.onDocumentStateUpdate(true);
                 }
@@ -185,7 +187,6 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
 
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         });
     }
@@ -197,25 +198,6 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
     }
 
 
-   /* private void calculateBrutoPrice(){
-        readPrezzoUnitario();
-        readQuantita();
-        this.brutoPrice = documentState.getPrezzoUnitario()* documentState.getQuantita();
-
-    }*/
-
-    /*private void calculateImponibileValue(){
-        if(article!=null) {
-            calculateBrutoPrice();
-            calculateScontoValue();
-            Double imponibile = this.brutoPrice - documentState.getScontoValue();
-            documentState.setImponibile(imponibile);
-            imponibileTV.setText(imponibile.toString());
-        }
-        else {
-            imponibileTV.setText("0.0");
-        }
-    }*/
 
     //lexo prezzo unitario qe futet si input dhe ruaje ne document state
     private Double readPrezzoUnitario(){
@@ -237,37 +219,11 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
         return quantita;
     }
 
-   /* private Double showScontoPercentuale(){
-        Double scontoPercentuale = 0.0;
-        if(article.getPercentualeDiSconto1().trim().isEmpty()) {
-            scontoPercentuale = 10.0;
-        }
-        else{
-            scontoPercentuale = Double.valueOf(article.getPercentualeDiSconto1());
-        }
-        sconto_percentualeTV.setText(scontoPercentuale.toString());
-        documentState.setScontoPercentuale(scontoPercentuale);
-        return scontoPercentuale;
-    }
-
-    private Double calculateScontoValue(){
-        Double scontoValue = 0.0;
-        if(article!=null) {
-            showScontoPercentuale();
-            scontoValue = this.brutoPrice * (documentState.getScontoPercentuale() / 100);
-            documentState.setScontoValue(scontoValue);
-        }
-        sconto_valueTV.setText(scontoValue.toString());
-        return scontoValue;
-    }*/
-
-    //duke perfshire IVA
-  /*  private Double calculateTotalePrezzo(){
-        Double prezzoTotale = 0.0;
-        return prezzoTotale;
-    }*/
-
-
+  public void reBindDataAfterBackPressedWithFirstDocumentRow(DocumentState documentState){
+      this.documentState = documentState;
+      Log.d("SkerdiBind", " U be bind me documentState : "+ documentState.getNumerArticolo());
+      bindDocumentStateWithUI(documentState);
+  }
 
 
     @Override
@@ -354,6 +310,7 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
         documentState.setScontoValue(scontoValue);
         documentState.setPrezzoTotaleArticle(prezzoTotaleArticle);
         documentState.setScontoPercentuale(scontoPercentuale);
+        if(article!=null)
         documentState.setArticle(article);
 
         //e bejme bind directly true pasi kur te rihapet ndryshimet jane ruajtur dhe nuk ka property bosh
@@ -397,12 +354,18 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
         ((OrdineClienteActivity)getActivity()).hideDialog();
         //pasi zgjedhim artikulin e bejme save ne document state dhe japim komanden e update ui me te dhenat nga document state
         DocumentStateHelper.selectArticleAction(documentState, article);
+        if(this.article!=null || EditTextHelper.isEditTextModified(prezzo_unitarioET) && EditTextHelper.isEditTextModified(article_quantitaET)){
+            onUpdateDocumentStateListener.onDocumentStateUpdate(true);
+        }
         this.article = article;
+
+
         updateUserInterfaceWithChanges();
         //showScontoPercentuale();
     }
 
     private void updateUserInterfaceWithChanges(){
+
         //kjo vlere do jete gjtihmone jo null  prandaj e bejme reset sa here qe bejme ndryshimet
         this.numero_articoloTV.setText(documentState.getNumerArticolo().toString());
         this.articolo_numero_bottomTV.setText(documentState.getNumerArticolo().toString());
@@ -420,7 +383,7 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
 
         //shfaqim sasine
         if(documentState.getQuantita()!=null){
-          //  this.article_quantitaET.setText(documentState.getQuantita().toString());
+          // this.article_quantitaET.setText(documentState.getQuantita().toString());
         }
 
         //shfaqim descrizione
@@ -430,7 +393,7 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
 
         //shfaqim prezzo unitario
         if(documentState.getPrezzoUnitario()!=null){
-        //    this.prezzo_unitarioET.setText(documentState.getPrezzoUnitario().toString());
+         //   this.prezzo_unitarioET.setText(documentState.getPrezzoUnitario().toString());
         }
 
         //shfaqim sconto percentuale
@@ -453,6 +416,10 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
             this.prezzo_totaleTV.setText(Utils.doubleToSringFormat(documentState.getPrezzoTotaleArticle()));
         }
 
+        //nese mund te kalkulojme price nga fillimi kalkuloje
+        /*if(flagCanCalculatePrice)
+        DocumentStateHelper.selectArticleAction();*/
+
     }
 
     @Override
@@ -464,6 +431,11 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
     public void onDocumentStateUpdate(boolean valid) {
         if(!DocumentStateHelper.calculateTotalArticoloPrice(documentState)){
             Toast.makeText(getActivity(),"Calculations for total price failed because no Iva with that id was found", Toast.LENGTH_LONG);
+        }
+        else{
+            if(!documentState.isBindDirectly()){
+                documentState.setBindDirectly(true);
+            }
         }
          updateUserInterfaceWithChanges();
         ((OrdineClienteActivity)getActivity()).updateBottomCalculations();
