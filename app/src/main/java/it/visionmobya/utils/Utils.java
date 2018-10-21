@@ -22,7 +22,7 @@ public class Utils {
 
     public static String getAgentWorkingDirectory(String agentUserName, String directory){
         StringBuilder stringBuilder = new StringBuilder();
-        String agentCode = agentUserName.replace("agente", "");
+        String agentCode = agentUserName.toLowerCase().replace("agente", "");
         stringBuilder.append("/").append(agentCode).append("/").append(directory);
         Log.d("directory " , " dir : " + stringBuilder.toString());
         return stringBuilder.toString();

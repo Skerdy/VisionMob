@@ -27,6 +27,7 @@ public class DocumentState implements Serializable, Parcelable {
     private Integer numerArticolo;
     private Double scontoPercentuale;
     private Double ivaValueUponPrice;
+    private String unitaDiMisura;
     @Builder.Default
     private boolean bindDirectly = false;
 
@@ -77,6 +78,7 @@ public class DocumentState implements Serializable, Parcelable {
         } else {
             ivaValueUponPrice = in.readDouble();
         }
+        unitaDiMisura = in.readString();
         bindDirectly = in.readByte() != 0;
     }
 
@@ -132,6 +134,7 @@ public class DocumentState implements Serializable, Parcelable {
             dest.writeByte((byte) 1);
             dest.writeDouble(ivaValueUponPrice);
         }
+        dest.writeString(unitaDiMisura);
         dest.writeByte((byte) (bindDirectly ? 1 : 0));
     }
 

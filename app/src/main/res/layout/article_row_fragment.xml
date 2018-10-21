@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:layout_height="match_parent">
 <RelativeLayout
     android:layout_width="match_parent"
@@ -68,6 +71,8 @@
                 </ImageView>
 
                 <TextView
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="4dp"
@@ -111,6 +116,7 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
+                android:background="@drawable/edit_text_design"
                 android:layout_height="wrap_content">
                 <EditText
                     android:id="@+id/article_quantita"
@@ -118,7 +124,7 @@
                     android:layout_height="match_parent"
                     android:hint="Quantita"
                     android:textColor="#000"
-                    android:inputType="number"
+                    android:inputType="numberDecimal"
                     android:textSize="13sp"/>
             </android.support.design.widget.TextInputLayout>
 
@@ -149,6 +155,7 @@
 
         <!--Rreshti i trete-->
         <LinearLayout
+            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:weightSum="2"
@@ -168,14 +175,17 @@
                     android:layout_height="wrap_content"
                     android:text="Unita di misura :"
                     android:textStyle="bold"
-                    android:layout_weight="1.3"/>
+                    android:layout_weight="1.4"/>
 
-                <TextView
+                <EditText
                     android:id="@+id/unita_misura"
                     android:layout_width="0dp"
-                    android:textColor="#67c906"
-                    android:layout_weight="076"
-                    android:layout_height="match_parent" />
+                    android:layout_weight="0.6"
+                    android:textColor="#A9A9A9"
+                    android:textSize="13sp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_design" />
             </LinearLayout>
 
             <!-- Codice Iva djathtas-->
@@ -207,6 +217,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:weightSum="2"
+            android:layout_marginTop="10dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -215,33 +226,30 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:layout_width="0dp"
+                android:weightSum="2"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:paddingTop="10dp"
                     android:layout_width="0dp"
-                    android:layout_marginTop="2dp"
                     android:layout_height="wrap_content"
                     android:text="Prezzo unit :"
-                    android:paddingBottom="10dp"
                     android:textStyle="bold"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1.2"/>
 
-                <android.support.design.widget.TextInputLayout
+
+                <EditText
+                    android:id="@+id/prezzo_unit"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_weight="0.8"
+                    android:textColor="#A9A9A9"
+                    android:textSize="13sp"
+                    android:inputType="numberDecimal"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="10dp">
-                    <EditText
-                        android:id="@+id/prezzo_unit"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="number"
-                        android:textColor="#000"
-                        android:textSize="13sp"/>
+                    android:background="@drawable/edit_text_design" />
 
-                </android.support.design.widget.TextInputLayout>
 
             </LinearLayout>
 
@@ -249,6 +257,7 @@
             <LinearLayout
                 android:layout_weight="1"
                 android:layout_width="0dp"
+                android:weightSum="2"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
@@ -259,11 +268,15 @@
                     android:textStyle="bold"
                     android:layout_weight="1"/>
 
-                <TextView
+                <EditText
                     android:id="@+id/sconto_percentuale"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="wrap_content" />
+                    android:textSize="13sp"
+                    android:textColor="#A9A9A9"
+                    android:inputType="numberDecimal"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_design" />
             </LinearLayout>
 
         </LinearLayout>
@@ -275,6 +288,7 @@
             android:layout_height="wrap_content"
             android:weightSum="2"
             android:gravity="center_vertical"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <!-- unita di misura majtas-->
@@ -305,12 +319,13 @@
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:weightSum="2"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Sconto:"
+                    android:text="Sconto: "
                     android:textStyle="bold"
                     android:layout_weight="1"/>
 
@@ -328,7 +343,7 @@
             android:gravity="left"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:orientation="horizontal">
 
             <TextView

@@ -71,9 +71,7 @@ public class DocumentStateHelper {
                 documentState.setPrezzoTotaleArticle(total_price);
                 return false;
             }
-
             return true;
-
     }
 
     private static int validateArticleScontoPErcentuale(Article article){

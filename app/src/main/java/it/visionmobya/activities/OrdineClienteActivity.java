@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -74,6 +75,7 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ordine_cliente);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         initUI();
         setupDatePicker();
         initArticleFragmentAndDocumentStates();
@@ -113,14 +115,11 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
     private void showArticleRowsFragment(ArrayList<DocumentState> documentState){
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         ArticleRowsFragment articleRowsFragment = ArticleRowsFragment.newInstance(documentState);
+      //  if(getSupportFragmentManager().findFragmentByTag("ArticleRowsFragment")==null)
         fragmentTransaction.addToBackStack("ArticleRowsFragment");
-        if(fragmentTransaction.isAddToBackStackAllowed()) {
-            Log.d("BackStack", "U be add ne backstack Article Rows");
-        }
         fragmentTransaction.replace(R.id.fragmentContainer, articleRowsFragment, "ArticleRowsFragment");
         fragmentTransaction.commit();
         getSupportFragmentManager().executePendingTransactions();
-        Log.d("BackStack", " Count = " + getSupportFragmentManager().getFragments().size() );
     }
 
     private void showCloseDocumento(){
@@ -436,6 +435,7 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
         alertDialog.setMessage("Are you sure? Data might be lost!");
         alertDialog.setPositiveButton("Si", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
+                OrdineClienteActivity.super.onBackPressed();
                 OrdineClienteActivity.super.onBackPressed();
             }
         });

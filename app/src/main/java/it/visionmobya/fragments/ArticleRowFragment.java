@@ -10,39 +10,37 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
-import org.apache.commons.net.io.Util;
-
 import java.util.List;
 
 import it.visionmobya.CSVModule.VisionFileManager;
 import it.visionmobya.activities.OrdineClienteActivity;
 import it.visionmobya.R;
-import it.visionmobya.controllers.AliquoteController;
 import it.visionmobya.listener.OnArticleClickListener;
 import it.visionmobya.listener.OnNewRowListener;
 import it.visionmobya.listener.OnUpdateDocumentStateListener;
 import it.visionmobya.models.Article;
-import it.visionmobya.models.Vat;
 import it.visionmobya.models.customModels.DocumentState;
 import it.visionmobya.recyclerView.adapters.ArticleAdapter;
 import it.visionmobya.utils.DocumentStateHelper;
 import it.visionmobya.utils.PaginationUtil.DocumentNavigationListener;
 import it.visionmobya.utils.PaginationUtil.EditTextHelper;
 import it.visionmobya.utils.Utils;
+import it.visionmobya.utils.ValidatorHelper;
 
 public class ArticleRowFragment extends Fragment  implements OnArticleClickListener, View.OnClickListener, OnNewRowListener , DocumentNavigationListener, OnUpdateDocumentStateListener {
 
     public static final String FRAGMENT_ARGUMENTS = "articleRowFragmentArguments";
     private static final String FRAGMENT_ARGUMENTS_NUMERO = "articoloNumero" ;
 
-    private EditText article_quantitaET, article_descrizioneET, prezzo_unitarioET;
-    private TextView numero_articoloTV, codice_articoloTV, unita_di_misuraTV, codice_ivaTV, sconto_percentualeTV, imponibileTV, sconto_valueTV, articolo_numero_bottomTV, prezzo_totaleTV, article_nameTV ;
+    private EditText article_quantitaET, article_descrizioneET, prezzo_unitarioET, sconto_percentualeET, unita_di_misuraET;
+    private TextView numero_articoloTV, codice_articoloTV, codice_ivaTV, imponibileTV, sconto_valueTV, articolo_numero_bottomTV, prezzo_totaleTV, article_nameTV ;
     private LinearLayout select_article;
     private Article article;
     private DocumentState documentState = null;
@@ -63,6 +61,7 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
         super.onCreate(savedInstanceState);
         Log.d("FragNav", "Article Row on Create , savedInstanceState null = " +(savedInstanceState==null));
         //sa here qe hapet nej fragment row i ri regjistrojme on new row listener tek aktiviteti ordine cliente
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         ((OrdineClienteActivity)getActivity()).setOnNewRowListener(this);
         ((OrdineClienteActivity)getActivity()).setDocumentNavigationListener(this);
         if(getArguments().getSerializable(FRAGMENT_ARGUMENTS)!=null){
@@ -93,12 +92,12 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
             Log.d("SkerdiTask", "U be bind dokument state me numer :" +documentState.getNumerArticolo());
 
         }
-        else{
+        else {
             Log.d("SkerdiTask", "Nuk U be bind dokument state me numer :" +documentState.getNumerArticolo() + " sepse isBindDirectly = " + documentState.isBindDirectly() + " dhe article eshte null ? " + (documentState.getArticle()==null));
             this.numero_articoloTV.setText("" + articolo_numero);
             this.articolo_numero_bottomTV.setText(""+ articolo_numero);
         }
-
+        attachEditTextsOnTextChangedListeners();
     }
 
 
@@ -114,9 +113,9 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
         this.prezzo_unitarioET.setText(documentState.getPrezzoUnitario().toString());
         this.numero_articoloTV.setText(documentState.getNumerArticolo().toString());
         this.codice_articoloTV.setText(documentState.getArticle().getCodiceArticolo());
-        this.unita_di_misuraTV.setText(documentState.getArticle().getCodiceUnitaDiMisura());
+        this.unita_di_misuraET.setText(documentState.getArticle().getCodiceUnitaDiMisura());
         this.codice_ivaTV.setText(documentState.getArticle().getCodiceIvaVendite());
-        this.sconto_percentualeTV.setText(documentState.getScontoPercentuale().toString());
+        this.sconto_percentualeET.setText(documentState.getScontoPercentuale().toString());
         this.imponibileTV.setText(Utils.doubleToSringFormat(documentState.getImponibile()));
         this.sconto_valueTV.setText(Utils.doubleToSringFormat(documentState.getScontoValue()));
         this.articolo_numero_bottomTV.setText(documentState.getNumerArticolo().toString());
@@ -130,9 +129,9 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
         this.prezzo_unitarioET = view.findViewById(R.id.prezzo_unit);
         this.numero_articoloTV = view.findViewById(R.id.articolo_numero);
         this.codice_articoloTV = view.findViewById(R.id.article_id);
-        this.unita_di_misuraTV = view.findViewById(R.id.unita_misura);
+        this.unita_di_misuraET = view.findViewById(R.id.unita_misura);
         this.codice_ivaTV = view.findViewById(R.id.codice_iva);
-        this.sconto_percentualeTV= view.findViewById(R.id.sconto_percentuale);
+        this.sconto_percentualeET = view.findViewById(R.id.sconto_percentuale);
         this.imponibileTV = view.findViewById(R.id.imponibile);
         this.sconto_valueTV = view.findViewById(R.id.sconto_value);
         this.articolo_numero_bottomTV = view.findViewById(R.id.articolo_numero_bottom);
@@ -148,47 +147,6 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
         numero_articoloTV.setText(""+articolo_numero);
         articolo_numero_bottomTV.setText(""+articolo_numero);
 
-        article_quantitaET.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                Log.d("SkerdiText" , "On Text Changed :  Editable = " +charSequence.toString());
-                  //shtojme quantita tek document state
-                  readQuantita();
-                  //nese ka prezzo unitario bej update
-                  if(!prezzo_unitarioET.getText().toString().trim().isEmpty() && documentState.getArticle()!=null){
-                      onUpdateDocumentStateListener.onDocumentStateUpdate(true);
-                  }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-              Log.d("SkerdiText" , "After Text Changed :  Editable = " +editable.toString());
-            }
-        });
-
-        prezzo_unitarioET.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                Log.d("SkerdiText" , "On Text Changed :  Editable = " +charSequence.toString());
-                //shtojme prezzo unitario tek document state
-                readPrezzoUnitario();
-                if(!article_quantitaET.getText().toString().trim().isEmpty() && documentState.getArticle()!=null){
-                    onUpdateDocumentStateListener.onDocumentStateUpdate(true);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
     }
 
     private void selectArticle(){
@@ -217,6 +175,25 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
         }
         documentState.setQuantita(quantita);
         return quantita;
+    }
+
+    private String readUnitaDiMisura(){
+        String unita_di_misura = "";
+        if(unita_di_misuraET.getText()!=null){
+            unita_di_misura = unita_di_misuraET.getText().toString().trim();
+        }
+        documentState.setUnitaDiMisura(unita_di_misura);
+        return unita_di_misura;
+    }
+
+
+    private Double readScontoPercentuale(){
+        Double scontoPercentuale = 0.0;
+        if(!sconto_percentualeET.getText().toString().isEmpty()){
+            scontoPercentuale = Double.valueOf(sconto_percentualeET.getText().toString());
+        }
+        documentState.setScontoPercentuale(scontoPercentuale);
+        return scontoPercentuale;
     }
 
   public void reBindDataAfterBackPressedWithFirstDocumentRow(DocumentState documentState){
@@ -263,7 +240,6 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
         Double imponibile = 0.0;
         if(imponibileTV.getText().toString().isEmpty()){
             flag = false;
-            Toast.makeText(getActivity(), "Something went wrong while saving data [imponibile]", Toast.LENGTH_LONG).show();
         }
         else{
             imponibile = Double.valueOf(imponibileTV.getText().toString());
@@ -274,9 +250,8 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
         Double scontoValue = 0.0;
         if(sconto_valueTV.getText().toString().isEmpty()){
             flag = false;
-            Toast.makeText(getActivity(), "Something went wrong while saving data [scontoValue]", Toast.LENGTH_LONG).show();
         }
-        else{
+        else {
              scontoValue = Double.valueOf(sconto_valueTV.getText().toString());
         }
 
@@ -285,7 +260,6 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
         Double prezzoTotaleArticle = 0.0;
         if(sconto_valueTV.getText().toString().isEmpty()){
             flag = false;
-            Toast.makeText(getActivity(), "Something went wrong while saving data [prezzo_totale]", Toast.LENGTH_LONG).show();
         }
         else{
             prezzoTotaleArticle = Double.valueOf(prezzo_totaleTV.getText().toString());
@@ -295,10 +269,9 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
         Double scontoPercentuale = 0.0;
         if(sconto_valueTV.getText().toString().isEmpty()){
             flag = false;
-            Toast.makeText(getActivity(), "Something went wrong while saving data [scontoPercentuale]", Toast.LENGTH_LONG).show();
         }
-        else{
-            scontoPercentuale = Double.valueOf(sconto_percentualeTV.getText().toString());
+        else {
+            scontoPercentuale = Double.valueOf(sconto_percentualeET.getText().toString());
         }
 
 
@@ -354,17 +327,18 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
         ((OrdineClienteActivity)getActivity()).hideDialog();
         //pasi zgjedhim artikulin e bejme save ne document state dhe japim komanden e update ui me te dhenat nga document state
         DocumentStateHelper.selectArticleAction(documentState, article);
-        if(this.article!=null || EditTextHelper.isEditTextModified(prezzo_unitarioET) && EditTextHelper.isEditTextModified(article_quantitaET)){
+        if(ValidatorHelper.isDocumentEligibleForCalculations(article, article_quantitaET,unita_di_misuraET, prezzo_unitarioET, sconto_percentualeET)){
             onUpdateDocumentStateListener.onDocumentStateUpdate(true);
+        }
+        else{
+            updateUserInterfaceWithChanges(true);
         }
         this.article = article;
 
 
-        updateUserInterfaceWithChanges();
-        //showScontoPercentuale();
     }
 
-    private void updateUserInterfaceWithChanges(){
+    private void updateUserInterfaceWithChanges(boolean articleClicked){
 
         //kjo vlere do jete gjtihmone jo null  prandaj e bejme reset sa here qe bejme ndryshimet
         this.numero_articoloTV.setText(documentState.getNumerArticolo().toString());
@@ -374,16 +348,13 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
         if(documentState.getArticle()!=null){
             this.article_nameTV.setText(documentState.getArticle().getDescrizione().trim());
             this.codice_articoloTV.setText(documentState.getArticle().getCodiceArticolo().trim());
-            this.unita_di_misuraTV.setText(documentState.getArticle().getCodiceUnitaDiMisura().trim());
+            if(articleClicked) {
+                 this.unita_di_misuraET.setText(documentState.getArticle().getCodiceUnitaDiMisura().trim());
+            }
             this.codice_ivaTV.setText(documentState.getArticle().getCodiceIvaVendite());
         }
         else {
             Log.d("UpdateUI" , "Nuk u be update i UI pas zjgedhjes se artikullit sepse artikulli i ruajtur ne doc state eshte null! ");
-        }
-
-        //shfaqim sasine
-        if(documentState.getQuantita()!=null){
-          // this.article_quantitaET.setText(documentState.getQuantita().toString());
         }
 
         //shfaqim descrizione
@@ -397,9 +368,9 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
         }
 
         //shfaqim sconto percentuale
-        if(documentState.getScontoPercentuale()!=null){
-            this.sconto_percentualeTV.setText(documentState.getScontoPercentuale().toString());
-        }
+        /*if(documentState.getScontoPercentuale()!=null){
+            this.sconto_percentualeET.setText(documentState.getScontoPercentuale().toString());
+        }*/
 
         //shfaqim imponibile value
         if(documentState.getImponibile()!=null){
@@ -416,10 +387,6 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
             this.prezzo_totaleTV.setText(Utils.doubleToSringFormat(documentState.getPrezzoTotaleArticle()));
         }
 
-        //nese mund te kalkulojme price nga fillimi kalkuloje
-        /*if(flagCanCalculatePrice)
-        DocumentStateHelper.selectArticleAction();*/
-
     }
 
     @Override
@@ -432,12 +399,110 @@ public class ArticleRowFragment extends Fragment  implements OnArticleClickListe
         if(!DocumentStateHelper.calculateTotalArticoloPrice(documentState)){
             Toast.makeText(getActivity(),"Calculations for total price failed because no Iva with that id was found", Toast.LENGTH_LONG);
         }
-        else{
+        else {
             if(!documentState.isBindDirectly()){
                 documentState.setBindDirectly(true);
             }
         }
-         updateUserInterfaceWithChanges();
+
+         updateUserInterfaceWithChanges(false);
         ((OrdineClienteActivity)getActivity()).updateBottomCalculations();
     }
+
+
+    private void attachEditTextsOnTextChangedListeners(){
+
+        //degjojme ndryshimin e quantita
+        article_quantitaET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                //shtojme quantita tek document state
+                readQuantita();
+                //nese ka prezzo unitario bej update
+                if(ValidatorHelper.isDocumentEligibleForCalculations(article, article_quantitaET, unita_di_misuraET, prezzo_unitarioET,sconto_percentualeET)){
+                    onUpdateDocumentStateListener.onDocumentStateUpdate(true);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
+
+        //degjojme ndryhsimin e prexzo unitario
+        prezzo_unitarioET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                //shtojme prezzo unitario tek document state
+                readPrezzoUnitario();
+                if(ValidatorHelper.isDocumentEligibleForCalculations(article, article_quantitaET, unita_di_misuraET, prezzo_unitarioET,sconto_percentualeET)){
+                    onUpdateDocumentStateListener.onDocumentStateUpdate(true);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
+
+
+        //degjojme ndryshimin e sconto percentuale
+
+        sconto_percentualeET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                readScontoPercentuale();
+                if(ValidatorHelper.isDocumentEligibleForCalculations(article, article_quantitaET, unita_di_misuraET, prezzo_unitarioET,sconto_percentualeET)){
+                    onUpdateDocumentStateListener.onDocumentStateUpdate(true);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
+        //degjojme ndryshimin e unita dimisura
+        unita_di_misuraET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                readUnitaDiMisura();
+                if(ValidatorHelper.isDocumentEligibleForCalculations(article, article_quantitaET, unita_di_misuraET, prezzo_unitarioET,sconto_percentualeET)){
+                    onUpdateDocumentStateListener.onDocumentStateUpdate(true);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
+
+    }
+
+
+
 }
