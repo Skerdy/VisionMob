@@ -12,6 +12,8 @@ import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -24,6 +26,7 @@ import it.visionmobya.models.customModels.FtpResponse;
 import it.visionmobya.models.customModels.ServerRequest;
 import it.visionmobya.utils.CodesUtil;
 import it.visionmobya.utils.MySharedPref;
+import it.visionmobya.utils.Utils;
 
 public class FtpClientTask extends AsyncTask<ServerRequest, String, FtpResponse> implements ProgressBarMessage {
 
@@ -63,30 +66,40 @@ public class FtpClientTask extends AsyncTask<ServerRequest, String, FtpResponse>
             ftpClient.connect(SERVER_URL, SERVER_PORT);
             if (FTPReply.isPositiveCompletion(ftpClient.getReplyCode())) {
                 status = ftpClient.login(USERNAME, PASSWORD);
-                ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-                ftpClient.enterLocalPassiveMode();
-                String[] filesInServer = ftpClient.listNames();
+                if (status){
 
-                //shfaq te gjitha filet qe ndodhen ne server
-                for(int i = 0 ; i< filesInServer.length;i++){
-                    Log.d("Files", "Server File " + 1 + filesInServer[i]);
+                    ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+                    ftpClient.enterLocalPassiveMode();
+                    ftpClient.changeWorkingDirectory(serverRequest.getServerCredentials().getImportDirectory());
+
+                    //logjika per marrjen e fileve import nga serveri lokalisht
+                    //iterojme per sa filename kemi futur si parameter dhe per cdo filename krijojme nje file dhe e kthejme mbrapsht tek metoda on PostExecute
+                    for (String filename : serverRequest.getFilename()) {
+                        // bufferedInputStream = new BufferedInputStream(new FileInputStream(SERVER_URL+filename));
+                        try (OutputStream os = serverRequest.getContext().openFileOutput( filename, 0)) {
+                            boolean retrieved = ftpClient.retrieveFile(filename, os);
+                            Log.d("SaveFile", "File : " + filename + " retrieved : " + retrieved);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    //marrim edhe filet export per sinkronizim te metejshem nese ekzistojne
+                    ftpClient.changeToParentDirectory();
+                    ftpClient.changeWorkingDirectory(serverRequest.getServerCredentials().getExportDirectory());
+                    for(String filename : ftpClient.listNames()){
+                        File file = new File(context.getFilesDir().getAbsolutePath() + "/" + Utils.EXPORT + "/"+filename);
+                        // bufferedInputStream = new BufferedInputStream(new FileInputStream(SERVER_URL+filename));
+                        try (OutputStream os = new FileOutputStream(file, true)) {
+                            boolean retrieved = ftpClient.retrieveFile(filename, os);
+                            Log.d("SaveFile", "File : " + filename + " retrieved : " + retrieved);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                  }
                 }
 
-                Log.d("Ftp ", " Value of status : " + status);
-                //logjika per marrjen e filet nga serveri lokalisht
-                //iterojme per sa filename kemi futur si parameter dhe per cdo filename krijojme nje file dhe e kthejme mbrapsht tek metoda on PostExecute
-                for(String filename : serverRequest.getFilename()){
-                    ftpClient.changeWorkingDirectory(serverRequest.getServerCredentials().getWorkingDirectory());
-                   // bufferedInputStream = new BufferedInputStream(new FileInputStream(SERVER_URL+filename));
-                    try (OutputStream os = serverRequest.getContext().openFileOutput(filename,0)){
-                        boolean retrieved =  ftpClient.retrieveFile(filename,os);
-                        Log.d("SaveFile", "File : " + filename + " retrieved : " + retrieved);
-                    }
-                    catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }

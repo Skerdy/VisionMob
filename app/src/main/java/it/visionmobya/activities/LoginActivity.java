@@ -38,15 +38,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.login);
         initUI();
 
-        DocRig docRig = new DocRig.DocRigBuilder("12", "109").withDesDocRig("descrizione").withCodiceIva("12").build();
-
-        try {
-            CSVWriter.writeRecord(this, docRig, null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
         mySharedPref = new MySharedPref(this);
 
         //ne qofte se agjenti eshte i loguar shko direkt tek main activity duke kaluar boolean value true per key CodesUtil.NO_LOGIN
@@ -91,7 +82,8 @@ public class LoginActivity extends AppCompatActivity {
         if (etUrl.getText().toString().trim().isEmpty()) {
             flag = false;
             etUrl.setError("Please insert Url!");
-        }if (etPort.getText().toString().trim().isEmpty()) {
+        }
+        if (etPort.getText().toString().trim().isEmpty()) {
             flag = false;
             etUrl.setError("Please insert Port!");
         }
@@ -107,17 +99,33 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login(String username, String password, String url, Integer port) {
+        List<String> files = getAllFiles();
+        mySharedPref.saveStringInSharedPref(CodesUtil.USER_NAME, username);
+        mySharedPref.saveStringInSharedPref(CodesUtil.PASSWORD, password);
+        mySharedPref.saveStringInSharedPref(CodesUtil.URL, url);
+        mySharedPref.saveStringInSharedPref(CodesUtil.PORT, port.toString());
+        ServerCredentials serverCredentials = new ServerCredentials(username, password, url, port);
+        String importDirectory = Utils.getAgentWorkingDirectory(username, Utils.IMPORT);
+        String exportDirectory = Utils.getAgentWorkingDirectory(username, Utils.EXPORT);
+        serverCredentials.setImportDirectory(importDirectory);
+        serverCredentials.setExportDirectory(exportDirectory);
+        mySharedPref.saveObjectToSharedPreference(CodesUtil.SERVER_CREDENTIALS_OBJECT, serverCredentials);
+        FtpClientTask ftpClientTask = new FtpClientTask(this);
+        ftpClientTask.execute(new ServerRequest(this, serverCredentials, files));
+    }
+
+    private List<String> getAllFiles(){
         List<String> files = new ArrayList<>();
         files.add(TextFiles.MAGGRP);
         files.add(TextFiles.ANAGRAFE);
         files.add(TextFiles.ALIQUOTE);
         files.add(TextFiles.LISTINI);
         files.add(TextFiles.MAGART);
+        files.add(TextFiles.LOTTI);
+        files.add(TextFiles.SCADENZE);
+        files.add(TextFiles.DOCANA);
+        files.add(TextFiles.COMP_NAME);
         files.add(TextFiles.PAGAMENTI);
-        ServerCredentials serverCredentials = new ServerCredentials(username, password, url, port);
-        String workingDirectory = Utils.getAgentWorkingDirectory(username, Utils.IMPORT);
-        serverCredentials.setWorkingDirectory(workingDirectory);
-        FtpClientTask ftpClientTask = new FtpClientTask(this);
-        ftpClientTask.execute(new ServerRequest(this, serverCredentials, files));
+        return files;
     }
 }

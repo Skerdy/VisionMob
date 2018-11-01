@@ -22,7 +22,6 @@ public class DocRig {
 
     }
 
-
     public DocRig(DocRigBuilder docRigBuilder) {
         idTesta = docRigBuilder.idTesta;
         idRiga = docRigBuilder.idRiga;
@@ -57,7 +56,7 @@ public class DocRig {
                 .append(omaggio).append(";")
                 .append(desDocRig).append(";")
                 .append(lotto).append(";")
-                .append(noteRiga);
+                .append(noteRiga).append(System.lineSeparator());
         return stringBuilder.toString();
     }
 

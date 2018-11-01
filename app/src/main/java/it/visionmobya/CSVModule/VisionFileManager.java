@@ -19,6 +19,8 @@ import it.visionmobya.Interface.ProgressBarMessage;
 import it.visionmobya.models.Article;
 import it.visionmobya.models.ArticleCategory;
 import it.visionmobya.models.Client;
+import it.visionmobya.models.DocRig;
+import it.visionmobya.models.DocTes;
 import it.visionmobya.models.DocumentCategory;
 import it.visionmobya.models.Expiration;
 import it.visionmobya.models.History;
@@ -94,7 +96,7 @@ public class VisionFileManager {
     }
 
     private CSVParser getParserForFile(String filename) throws IOException {
-        return new CSVParser(getReader(new FileInputStream(this.context.getFilesDir()+"/" + filename)), CSVFormat.DEFAULT);
+        return new CSVParser(getReader(new FileInputStream(this.context.getFilesDir().getAbsolutePath()+"/" + filename)), CSVFormat.DEFAULT);
     }
 
     //kjo metode kthen listen me rekorde te nje parseri ne varesi te inputit qe i japim
@@ -185,11 +187,24 @@ public class VisionFileManager {
         return vats;
     }
 
+    private List<DocRig> getDocRigasFromRecords(List<CSVRecord> records){
+        List<DocRig> docRigs = new ArrayList<>();
+        for(CSVRecord csvRecord : records){
+            docRigs.add(CustomConverter.getDocRigFromRecord(csvRecord));
+        }
+        return docRigs;
+    }
 
+    private List<DocTes> getDocTestasFromRecords(List<CSVRecord> records){
+        List<DocTes> docTestas = new ArrayList<>();
+        for(CSVRecord csvRecord : records){
+            docTestas.add(CustomConverter.getDocTesFromRecords(csvRecord));
+        }
+        return docTestas;
+    }
 
     public List<Article> getArticlesWithCategoryId(String Id){
-
-               List<Article> result = new ArrayList<>();
+        List<Article> result = new ArrayList<>();
         for(Article article : articles){
             if(article.getCodiceCategoria().equals(Id)){
                 result.add(article);
@@ -197,6 +212,8 @@ public class VisionFileManager {
         }
         return result;
     }
+
+
 
     private List<Article> getAllArticles() throws IOException {
         return getArticlesFromRecords(getRecordsForParser(getParserForFile(TextFiles.MAGART)));
@@ -211,8 +228,7 @@ public class VisionFileManager {
     }
 
     private List<DocumentCategory> getAllDocumentCategories() throws IOException{
-        return getDocumentCategoriesFromRecords(getRecordsForParser(getParserForFileAsset(TextFiles.DOCANA)));
-       // return getDocumentCategoriesFromRecords(getRecordsForParser(getParserForFile(TextFiles.DOCANA)));
+        return getDocumentCategoriesFromRecords(getRecordsForParser(getParserForFile(TextFiles.DOCANA)));
     }
 
     private List<Expiration> getAllExpirations() throws IOException{
@@ -237,6 +253,14 @@ public class VisionFileManager {
 
     private List<Lotti> getAllLotties() throws IOException {
         return getLottiFromRecords(getRecordsForParser(getParserForFile(TextFiles.LOTTI)));
+    }
+
+    public List<DocRig> getAllDocumentRigas() throws IOException {
+        return getDocRigasFromRecords(getRecordsForParser(getParserForFile("export/" +TextFiles.DOCRIG)));
+    }
+
+    public List<DocTes> getAllDocumentTestas() throws IOException{
+        return getDocTestasFromRecords(getRecordsForParser(getParserForFile("export/" +TextFiles.DOCTES)));
     }
 
 

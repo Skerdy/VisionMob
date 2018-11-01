@@ -1,5 +1,7 @@
 package it.visionmobya.models;
 
+import org.apache.commons.csv.CSVRecord;
+
 public class DocTes {
 
     private String idTesta;
@@ -50,7 +52,7 @@ public class DocTes {
                 .append(codiceSconto).append(";")
                 .append(dataCons).append(";")
                 .append(noteTesta).append(";")
-                .append(acconto);
+                .append(acconto).append(System.lineSeparator());
 
         return stringBuilder.toString();
     }

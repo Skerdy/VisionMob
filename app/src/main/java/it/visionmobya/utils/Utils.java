@@ -13,8 +13,6 @@ public class Utils {
     public static final String IMPORT= "import";
     public static final String EXPORT = "export";
 
-
-
     public static void hideKeyboardFrom(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
@@ -31,6 +29,12 @@ public class Utils {
     public static String doubleToSringFormat(Double doubleVal){
         DecimalFormat decimalFormat = new DecimalFormat("##.##");
         return decimalFormat.format(doubleVal);
+    }
+
+    public static String getAgentCodeFromUserName(String agentUserName){
+        String agentCode = agentUserName.toLowerCase().replace("agente", "");
+
+        return agentCode.replace("\"", "");
     }
 
 }

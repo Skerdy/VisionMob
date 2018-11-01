@@ -1,6 +1,7 @@
 package it.visionmobya.CSVModule;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -15,6 +16,7 @@ import it.visionmobya.models.Article;
 import it.visionmobya.models.ArticleCategory;
 import it.visionmobya.models.Client;
 import it.visionmobya.models.DocRig;
+import it.visionmobya.models.DocTes;
 import it.visionmobya.models.DocumentCategory;
 import it.visionmobya.models.Expiration;
 import it.visionmobya.models.History;
@@ -22,8 +24,11 @@ import it.visionmobya.models.Listino;
 import it.visionmobya.models.Lotti;
 import it.visionmobya.models.Payment;
 import it.visionmobya.models.Vat;
+import it.visionmobya.utils.Utils;
 
 public class CSVWriter {
+
+    private static final String EXPORT_DIR = "/" + Utils.EXPORT;
 
     //fute null filename nese nuk do ta specifikosh se ku dueht te ruhet ky rekord pasi metoda e llogarit vete ku duhet ta shtoje rekordin
     public static void writeRecord(Context context, Object record, String fileName) throws IOException {
@@ -99,20 +104,46 @@ public class CSVWriter {
                 filePath = filePath + "/" + TextFiles.ALIQUOTE;
             }
         }
+
         else if(record instanceof DocRig){
             csv=((DocRig)record).toCSVRecord();
             if(!pathSpecified){
-                filePath = filePath+ "/" + TextFiles.DOCRIG;
+                filePath = filePath + EXPORT_DIR +"/" + TextFiles.DOCRIG;
             }
         }
+
+        else if(record instanceof DocTes){
+            csv= ((DocTes)record).toCsvRecord();
+            if(!pathSpecified){
+                filePath = filePath + EXPORT_DIR +"/" + TextFiles.DOCTES;
+            }
+        }
+
         else{
             csv = "";
+        }
+
+        File exportDirectory = new File(context.getFilesDir().getAbsolutePath() + EXPORT_DIR);
+
+        if (!exportDirectory.exists()) {
+            boolean result = false;
+            try {
+                 result = exportDirectory.mkdir();
+            }
+            catch(SecurityException se){
+                Log.d("Directory" , " Directory creation failed: " + se.getMessage());
+            }
+            if(result) {
+                Log.d("Directory" , " Directory created");
+            }
         }
 
         Writer writer = new PrintWriter(new FileOutputStream(new File(filePath), true));
         printWriter = new PrintWriter(writer, true);
         csvPrinter = new CSVPrinter(printWriter,CSVFormat.DEFAULT.withRecordSeparator(System.lineSeparator()));
-        csvPrinter.printRecord(csv);
+        csvPrinter.printRecord(csv.replace("\"", ""));
+        printWriter.close();
         csvPrinter.close();
+        writer.close();
     }
 }

@@ -32,6 +32,7 @@ import it.visionmobya.fragments.ArticleRowsFragment;
 import it.visionmobya.fragments.CloserDocumentFragment;
 import it.visionmobya.fragments.RecyclerViewDialog;
 import it.visionmobya.listener.OnNewRowListener;
+import it.visionmobya.listener.OnSaveAndPrintButtonListener;
 import it.visionmobya.models.Client;
 import it.visionmobya.models.DocumentCategory;
 import it.visionmobya.models.customModels.DocumentState;
@@ -69,6 +70,7 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
     private Date pickedDate;
     private ListPagination<DocumentState> listPagination;
     private DocumentNavigationListener documentNavigationListener;
+    private OnSaveAndPrintButtonListener onSaveAndPrintButtonListener;
 
 
     @Override
@@ -124,14 +126,11 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
 
     private void showCloseDocumento(){
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        CloserDocumentFragment closerDocumentFragment = new CloserDocumentFragment();
+        CloserDocumentFragment closerDocumentFragment =  CloserDocumentFragment.newInstance(documentCategory, pickedDate, selectedClient);
         fragmentTransaction.addToBackStack("CloseDocumentFragment");
         if(fragmentTransaction.isAddToBackStackAllowed()){
             Log.d("BackStack", "U be add ne backstack Article CloseDocumentFragment");
         }
-
-
-
         fragmentTransaction.replace(R.id.fragmentContainer, closerDocumentFragment, "CloseDocumentFragment");
         fragmentTransaction.commit();
         getSupportFragmentManager().executePendingTransactions();
@@ -223,14 +222,7 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
             confirmBackNavigation();
         }
           else {
-                   /* if(getSupportFragmentManager().getFragments().size()>=2 && getSupportFragmentManager().getFragments().get(getSupportFragmentManager().getBackStackEntryCount()-1) instanceof ArticleRowsFragment
-                            && getSupportFragmentManager().getFragments().get(getSupportFragmentManager().getBackStackEntryCount()-2) instanceof ArticleRowFragment ){
-                        currentDocumentPosition = 0;
-                        listPagination.invalidate(currentDocumentPosition);
-                        ((ArticleRowFragment)getSupportFragmentManager().getFragments().get(getSupportFragmentManager().getBackStackEntryCount()-2)).reBindDataAfterBackPressedWithFirstDocumentRow(documentStates.get(currentDocumentPosition));
-                    }*/
-
-                   if(getSupportFragmentManager().findFragmentByTag("CloseDocumentFragment")!=null && getSupportFragmentManager().findFragmentByTag("CloseDocumentFragment").isVisible()){
+                 if(getSupportFragmentManager().findFragmentByTag("CloseDocumentFragment")!=null && getSupportFragmentManager().findFragmentByTag("CloseDocumentFragment").isVisible()){
                        resetBottomButtons();
                    }
 
@@ -241,6 +233,14 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
     private void showPrintAndSaveButton(){
       this.four_buttons_layout.setVisibility(View.GONE);
         this.save_and_print.setVisibility(View.VISIBLE);
+        this.save_and_print.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(onSaveAndPrintButtonListener!=null){
+                    onSaveAndPrintButtonListener.onSaveAndPrintClicked(documentStates);
+                }
+            }
+        });
     }
 
     private void resetBottomButtons(){
@@ -489,6 +489,10 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
 
     public void setDocumentNavigationListener(DocumentNavigationListener documentNavigationListener) {
         this.documentNavigationListener = documentNavigationListener;
+    }
+
+    public void setOnSaveAndPrintButtonListener(OnSaveAndPrintButtonListener onSaveAndPrintButtonListener) {
+        this.onSaveAndPrintButtonListener = onSaveAndPrintButtonListener;
     }
 }
 

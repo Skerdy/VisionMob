@@ -7,6 +7,10 @@ import it.visionmobya.models.Article;
 
 public class ArticleController {
 
+    private ArticleController(){
+
+    }
+
     public static List<Article> getAllArticles(){
         return VisionFileManager.getInstance().getArticles();
     }

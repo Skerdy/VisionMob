@@ -10,6 +10,8 @@ import java.util.List;
 import it.visionmobya.models.Article;
 import it.visionmobya.models.ArticleCategory;
 import it.visionmobya.models.Client;
+import it.visionmobya.models.DocRig;
+import it.visionmobya.models.DocTes;
 import it.visionmobya.models.DocumentCategory;
 import it.visionmobya.models.Expiration;
 import it.visionmobya.models.History;
@@ -174,6 +176,42 @@ public class CustomConverter {
 
     }
 
+    public static DocRig getDocRigFromRecord(CSVRecord csvRecord) {
+        List<String> fields = getUnitStringsFromRecord(csvRecord);
+        DocRig docRig = new DocRig.DocRigBuilder(fields.get(0), fields.get(1))
+                .withCodiceDocumento(fields.get(2))
+                .withNumeroDocumento(fields.get(3))
+                .withDataDocumento(fields.get(4))
+                .withNumeroRiga(fields.get(5))
+                .withCodiceArt(fields.get(6))
+                .withCodiceUm(fields.get(7))
+                .withQuantita(fields.get(8))
+                .withSconti(fields.get(9))
+                .withCodiceIva(fields.get(10))
+                .withOmaggio(fields.get(11))
+                .withDesDocRig(fields.get(12))
+                .withLotto(fields.get(13))
+                .withNoteRiga(fields.get(14)).build();
+        return docRig;
+    }
+
+    public static DocTes getDocTesFromRecords(CSVRecord csvRecord) {
+        List<String> fields = getUnitStringsFromRecord(csvRecord);
+        DocTes docTes = new DocTes.DoctesBuilder(fields.get(0), fields.get(1))
+                .withNumeroDocumento(fields.get(2))
+                .withDataDocumento(fields.get(3))
+                .withCodiceClifor(fields.get(4))
+                .withCodiceDestDiv(fields.get(5))
+                .withCodiceAgente(fields.get(6))
+                .withCodiceValuta(fields.get(7))
+                .withCodicePagamenti(fields.get(8))
+                .withCodiceSconto(fields.get(9))
+                .withDataCons(fields.get(10))
+                .withNoteTesta(fields.get(11))
+                .withAcconto(fields.get(12)).build();
+        return docTes;
+    }
+
     public static List<String> getUnitStringsFromRecord(CSVRecord csvRecord){
         List<String > fields = new ArrayList<>();
         for(int i =0 ; i<csvRecord.size(); i++) {
@@ -183,5 +221,6 @@ public class CustomConverter {
         }
         return fields;
     }
+
 
 }

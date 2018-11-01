@@ -17,8 +17,10 @@ import android.widget.Toast;
 import it.visionmobya.CSVModule.VisionFileManager;
 import it.visionmobya.Interface.ProgressBarMessage;
 import it.visionmobya.R;
+import it.visionmobya.models.customModels.ServerCredentials;
 import it.visionmobya.utils.CodesUtil;
 import it.visionmobya.utils.MySharedPref;
+import it.visionmobya.utils.Utils;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -35,6 +37,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mySharedPref = new MySharedPref(this);
         initViews();
         if (getIntent().getBooleanExtra(CodesUtil.NO_LOGIN, false)) {
+            String username = mySharedPref.getStringFromSharedPref(CodesUtil.USER_NAME);
+            String password = mySharedPref.getStringFromSharedPref(CodesUtil.PASSWORD);
+            String url = mySharedPref.getStringFromSharedPref(CodesUtil.URL);
+            String port = mySharedPref.getStringFromSharedPref(CodesUtil.PORT);
+            if(port.equals(MySharedPref.GET_STRING_FAILED)){
+                port  = "21";
+            }
+            ServerCredentials serverCredentials = new ServerCredentials(username, password, url, Integer.valueOf(port));
+            String importDirectory = Utils.getAgentWorkingDirectory(username, Utils.IMPORT);
+            String exportDirectory = Utils.getAgentWorkingDirectory(username, Utils.EXPORT);
+            serverCredentials.setImportDirectory(importDirectory);
+            serverCredentials.setExportDirectory(exportDirectory);
+            mySharedPref.saveObjectToSharedPreference(CodesUtil.SERVER_CREDENTIALS_OBJECT, serverCredentials);
             new LoadFilesTask().execute();
         }
     }

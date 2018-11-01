@@ -1,12 +1,17 @@
 package it.visionmobya.models.customModels;
 
-public class ServerCredentials {
+import android.content.Context;
+
+import java.io.Serializable;
+
+public class ServerCredentials implements Serializable {
 
     private String username;
     private String password;
     private String serverUrl;
     private Integer port;
-    private String workingDirectory;
+    private String importDirectory;
+    private String exportDirectory;
 
     public ServerCredentials(String username, String password, String serverUrl, Integer port) {
         this.username = username;
@@ -15,12 +20,20 @@ public class ServerCredentials {
         this.port = port;
     }
 
-    public String getWorkingDirectory() {
-        return workingDirectory;
+    public String getImportDirectory() {
+        return importDirectory;
     }
 
-    public void setWorkingDirectory(String workingDirectory) {
-        this.workingDirectory = workingDirectory;
+    public void setImportDirectory(String importDirectory) {
+        this.importDirectory = importDirectory;
+    }
+
+    public String getExportDirectory() {
+        return exportDirectory;
+    }
+
+    public void setExportDirectory(String exportDirectory) {
+        this.exportDirectory = exportDirectory;
     }
 
     public String getUsername() {

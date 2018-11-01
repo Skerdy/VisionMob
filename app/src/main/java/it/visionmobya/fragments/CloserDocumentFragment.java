@@ -1,39 +1,94 @@
 package it.visionmobya.fragments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
+import org.apache.commons.net.io.Util;
+
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
+import it.visionmobya.CSVModule.CSVWriter;
+import it.visionmobya.FTPClient.FtpClientSaveData;
 import it.visionmobya.R;
 import it.visionmobya.activities.ClientListActivity;
+import it.visionmobya.activities.OrdineClienteActivity;
+import it.visionmobya.controllers.DocRigController;
+import it.visionmobya.controllers.DocTesController;
+import it.visionmobya.listener.OnSaveAndPrintButtonListener;
+import it.visionmobya.models.Client;
+import it.visionmobya.models.DocRig;
+import it.visionmobya.models.DocTes;
+import it.visionmobya.models.DocumentCategory;
+import it.visionmobya.models.customModels.DocumentState;
+import it.visionmobya.models.customModels.ServerCredentials;
+import it.visionmobya.utils.CodesUtil;
+import it.visionmobya.utils.MySharedPref;
+import it.visionmobya.utils.Utils;
 
-public class CloserDocumentFragment extends Fragment implements DatePickerDialog.OnDateSetListener , TimePickerDialog.OnTimeSetListener {
+public class CloserDocumentFragment extends Fragment implements DatePickerDialog.OnDateSetListener , TimePickerDialog.OnTimeSetListener, OnSaveAndPrintButtonListener {
 
-    private EditText accontoEuro, casualeDelTransporto, aspettoDeibeni, numroColli, transportoAcuraDi, note;
-
+    private static final String FRAGMENT_ARGUMENTS = "sdfdsf";
+    private static final String FRAGMENT_ARGUMENTS_DATE ="asdadasddate" ;
+    private static final String FRAGMENT_ARGUMENTS_CLIENT ="dsdsfsdclient" ;
+    private EditText accontoEuroET, casualeTransportoET, aspettoDeiBeniET, numeroColliET, transportoCuraDiET, noteET;
     private TextView  dataTransporto, oraTransporto;
     private Date pickedDate;
-
     private DatePickerDialog datePickerDialog;
-
     private TimePickerDialog timePickerDialog;
     private DateFormat dateFormat;
     private DateFormat timeFormat;
+    private AlertDialog.Builder alertDialog;
+    private List<DocumentState> documentStates;
+    private DocumentCategory documentCategory;
+    private Date documentDate ;
+    private Client selectedClient;
+    private MySharedPref  mySharedPref;
+
+    public static CloserDocumentFragment newInstance(DocumentCategory documentCategory, Date documentDate, Client selectedClient) {
+        CloserDocumentFragment closerDocumentFragment = new CloserDocumentFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(FRAGMENT_ARGUMENTS, documentCategory);
+        args.putSerializable(FRAGMENT_ARGUMENTS_DATE, documentDate);
+        args.putSerializable(FRAGMENT_ARGUMENTS_CLIENT, selectedClient);
+        closerDocumentFragment.setArguments(args);
+        return closerDocumentFragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(getArguments().getSerializable(FRAGMENT_ARGUMENTS)!=null){
+            //nese ka nje dokument state per kete fragment atehere e marrim dhe e atachojme ne referencen publike te document state te fragmentit specifik
+            documentCategory = (DocumentCategory) getArguments().getSerializable(FRAGMENT_ARGUMENTS);
+            documentDate = (Date) getArguments().getSerializable(FRAGMENT_ARGUMENTS_DATE);
+            selectedClient = (Client) getArguments().getSerializable(FRAGMENT_ARGUMENTS_CLIENT);
+        }
+        //attach listenerin tek aktivity
+        ((OrdineClienteActivity)getActivity()).setOnSaveAndPrintButtonListener(this);
+
+        mySharedPref = new MySharedPref(getActivity());
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -78,15 +133,14 @@ public class CloserDocumentFragment extends Fragment implements DatePickerDialog
 
     private void initUI(View view) {
 
-        this.accontoEuro          = view.findViewById(R.id.accontoEuro);
-        this.casualeDelTransporto = view.findViewById(R.id.casualeDelTransporto);
-        this.aspettoDeibeni       = view.findViewById(R.id.aspettoDeibeni);
-        this.numroColli           = view.findViewById(R.id.numroColli);
-        this.transportoAcuraDi    = view.findViewById(R.id.transportoAcuraDi);
+        this.accontoEuroET          = view.findViewById(R.id.accontoEuro);
+        this.casualeTransportoET = view.findViewById(R.id.casualeDelTransporto);
+        this.aspettoDeiBeniET       = view.findViewById(R.id.aspettoDeibeni);
+        this.numeroColliET           = view.findViewById(R.id.numroColli);
+        this.transportoCuraDiET    = view.findViewById(R.id.transportoAcuraDi);
         this.dataTransporto       = view.findViewById(R.id.dataTransporto);
         this.oraTransporto        = view.findViewById(R.id.oraTransposto);
-        this.note                 = view.findViewById(R.id.note);
-
+        this.noteET                 = view.findViewById(R.id.note);
         setupDatePicker();
 
         this.dataTransporto.setOnClickListener(new View.OnClickListener() {
@@ -106,6 +160,55 @@ public class CloserDocumentFragment extends Fragment implements DatePickerDialog
                 }
             }
         });
+
+        alertDialog = new AlertDialog.Builder(getActivity() , R.style.AlertDialogBox);
+        alertDialog.setTitle("Save and Print");
+        alertDialog.setMessage("Sei sicuro di salvare il documento?");
+        alertDialog.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                generateDocRigaAndTesta();
+            }
+        });
+        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+    }
+
+    private boolean isDataValid(){
+        boolean flag = true;
+        if (accontoEuroET.getText().toString().trim().isEmpty()) {
+            flag = false;
+            accontoEuroET.setError("Please insert acconto Euro!");
+        }
+        if (casualeTransportoET.getText().toString().trim().isEmpty()) {
+            flag = false;
+            casualeTransportoET.setError("Please insert Transporto Casuale!");
+        }
+        if (aspettoDeiBeniET.getText().toString().trim().isEmpty()) {
+            flag = false;
+            aspettoDeiBeniET.setError("Please insert Aspetto dei beni ET!");
+        }
+        if (numeroColliET.getText().toString().trim().isEmpty()) {
+            flag = false;
+            numeroColliET.setError("Please insert Numero Colli!");
+        }
+        if (transportoCuraDiET.getText().toString().trim().isEmpty()) {
+            flag = false;
+            transportoCuraDiET.setError("Please insert Transporto Cura !");
+        }
+        if (dataTransporto.getText().toString().trim().isEmpty()) {
+            flag = false;
+            dataTransporto.setError("Please insert data Transporto !");
+        }
+
+        if (oraTransporto.getText().toString().trim().isEmpty()) {
+            flag = false;
+            oraTransporto.setError("Please insert ora Transporto!");
+        }
+
+        return flag;
     }
 
 
@@ -136,5 +239,95 @@ public class CloserDocumentFragment extends Fragment implements DatePickerDialog
         String timeString = timeFormat.format(today);
         this.dataTransporto.setText(dateString);
         this.oraTransporto.setText(timeString);
+    }
+
+    //pasi shtypet butoni save ne aktivity
+    @Override
+    public void onSaveAndPrintClicked(List<DocumentState> documentStates) {
+        this.documentStates = documentStates;
+        if(isDataValid()){
+            alertDialog.show();
+        }
+    }
+
+    private void generateDocRigaAndTesta(){
+        //kemi nje doc testa dhe disa doc riga sa document states kemi
+
+        FtpClientSaveData ftpClientSaveData = new FtpClientSaveData(getActivity());
+        //krijojme doc Testa
+        String testaId = DocTesController.getLastIdTesta();
+        Integer newTestaId = Integer.valueOf(testaId) + 1;
+
+        String documentCount = documentCategory.getConttatoreDocumento();
+        Integer newDocumentCount = Integer.valueOf(documentCount)+1;
+
+        //mos harrojme te shtojme me 1 countin tek docana per ate document category
+
+        String agentUserName = mySharedPref.getStringFromSharedPref(CodesUtil.USER_NAME);
+
+        //kujtohu te marresh codice pagamento te klientit nga anagrafe
+        String codicePagamento = "codice pagamento";
+
+
+        DocTes docTes = new DocTes.DoctesBuilder(newTestaId.toString(), documentCategory.getCodiceDocumento())
+                .withNumeroDocumento(newDocumentCount.toString())
+                .withDataDocumento(dateFormat.format(documentDate))
+                .withCodiceClifor(this.selectedClient.getCodiceCliente())
+                .withCodiceAgente(Utils.getAgentCodeFromUserName(agentUserName))
+                .withCodiceValuta("EUR")
+                .withCodicePagamenti(codicePagamento)
+                .withNoteTesta(noteET.getText().toString())
+                .withAcconto(accontoEuroET.getText().toString()).build();
+
+        try {
+            CSVWriter.writeRecord(getActivity(), docTes, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        for(DocumentState documentState : documentStates){
+            int lastDocRigId = DocRigController.getLastIdRiga();
+            String docRigId = (lastDocRigId+1)+"";
+
+            DocRig docRig = new DocRig.DocRigBuilder(docTes.getIdTesta(), docRigId ).withCodiceDocumento(documentCategory.getCodiceDocumento())
+                    .withNumeroDocumento(newDocumentCount.toString())
+                    .withDataDocumento(dateFormat.format(documentDate))
+                    .withNumeroRiga("1")
+                    .withCodiceArt(documentState.getArticle().getCodiceArticolo())
+                    .withCodiceUm(documentState.getUnitaDiMisura())
+                    .withQuantita(documentState.getQuantita().toString())
+                    .withSconti(documentState.getScontoPercentuale().toString())
+                    .withCodiceIva(documentState.getArticle().getCodiceIvaVendite())
+                    .withOmaggio("")
+                    .withDesDocRig(documentState.getDescrizione())
+                    .withLotto("")
+                    .withNoteRiga(noteET.getText().toString()).build();
+
+            try {
+                CSVWriter.writeRecord(getActivity(), docRig, null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            ServerCredentials serverCredentials = mySharedPref.getSavedObjectFromPreference(CodesUtil.SERVER_CREDENTIALS_OBJECT, ServerCredentials.class);
+            String username = mySharedPref.getStringFromSharedPref(CodesUtil.USER_NAME);
+            String password = mySharedPref.getStringFromSharedPref(CodesUtil.PASSWORD);
+            String url = mySharedPref.getStringFromSharedPref(CodesUtil.URL);
+            String port = mySharedPref.getStringFromSharedPref(CodesUtil.PORT);
+            if(port.equals(MySharedPref.GET_STRING_FAILED)){
+                port  = "21";
+            }
+
+            Log.d("ServerSave", " username : " + username + " pass : " + password + " url : " + url + " port" + port);
+            serverCredentials = new ServerCredentials(username.replace("\"", ""), password,url, Integer.valueOf(port));
+            String importDirectory = Utils.getAgentWorkingDirectory(username, Utils.IMPORT);
+            String exportDirectory = Utils.getAgentWorkingDirectory(username, Utils.EXPORT);
+            serverCredentials.setImportDirectory(importDirectory);
+            serverCredentials.setExportDirectory(exportDirectory);
+
+            ftpClientSaveData.execute(serverCredentials);
+        }
+
+
     }
 }

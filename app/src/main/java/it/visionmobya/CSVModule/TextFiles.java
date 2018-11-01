@@ -8,9 +8,11 @@ public class TextFiles {
     public static final String LISTINI = "LISTINI.TXT";
     public static final String MAGART = "MAGART.TXT";
     public static final String MAGGRP = "MAGGRP.TXT";
-    public static final String PAGAMENTI = "PAGAMENTI.TXT";
-    public static final String SCADENZE = "SCANDEZE.TXT" ;
-    public static final String HISTORY = "Ndryshoje kur te vije file txt" ;
-    public static final String LOTTI = "ndryshoje kur te vije file txt";
+    public static final String PAGAMENTI = "PAGAMENT.TXT";
+    public static final String SCADENZE = "SCADENZE.TXT" ;
+    public static final String HISTORY = "HISTORY.TXT" ;
+    public static final String LOTTI = "LOTTI.TXT";
     public static final String DOCRIG  = "DOCRIG.TXT";
+    public static final String DOCTES = "DOCTES.TXT";
+    public static final String COMP_NAME = "COMPNAME.TXT";
 }

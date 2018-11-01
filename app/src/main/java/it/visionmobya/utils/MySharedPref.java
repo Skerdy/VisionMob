@@ -10,6 +10,7 @@ public class MySharedPref {
 
     private Context ctx;
     private SharedPreferences.Editor editor;
+    public static final String GET_STRING_FAILED = "failedToGetStringFromShared";
 
     public MySharedPref(Context ctx){
         this.ctx=ctx;
@@ -32,7 +33,7 @@ public class MySharedPref {
 
     public String getStringFromSharedPref(String key){
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
-        return preferences.getString(key, "failedToGetStringFromShared");
+        return preferences.getString(key, GET_STRING_FAILED);
     }
 
     public  void saveObjectToSharedPreference(String serializedObjectKey, Object object) {

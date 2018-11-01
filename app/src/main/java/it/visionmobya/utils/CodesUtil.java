@@ -12,4 +12,8 @@ public class CodesUtil {
     public static final String DOCUMENT_TYPE_TO_CLIENT_LIST ="documentTyeptoClient_list" ;
     public static final String DOCUMENT_TYPE_ARGUMENT =" document_type_argument" ;
     public static final String DATE_ARGUMENT = "date_argument" ;
+    public static final String SERVER_CREDENTIALS_OBJECT = "servercredentials object" ;
+    public static final String PASSWORD = "passwordvisonmobya";
+    public static final String URL = "urlvisionmobya";
+    public static final String PORT = "portvisionmobya";
 }
