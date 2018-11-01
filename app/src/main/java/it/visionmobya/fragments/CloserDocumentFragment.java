@@ -308,26 +308,21 @@ public class CloserDocumentFragment extends Fragment implements DatePickerDialog
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            ServerCredentials serverCredentials = mySharedPref.getSavedObjectFromPreference(CodesUtil.SERVER_CREDENTIALS_OBJECT, ServerCredentials.class);
-            String username = mySharedPref.getStringFromSharedPref(CodesUtil.USER_NAME);
-            String password = mySharedPref.getStringFromSharedPref(CodesUtil.PASSWORD);
-            String url = mySharedPref.getStringFromSharedPref(CodesUtil.URL);
-            String port = mySharedPref.getStringFromSharedPref(CodesUtil.PORT);
-            if(port.equals(MySharedPref.GET_STRING_FAILED)){
-                port  = "21";
-            }
-
-            Log.d("ServerSave", " username : " + username + " pass : " + password + " url : " + url + " port" + port);
-            serverCredentials = new ServerCredentials(username.replace("\"", ""), password,url, Integer.valueOf(port));
-            String importDirectory = Utils.getAgentWorkingDirectory(username, Utils.IMPORT);
-            String exportDirectory = Utils.getAgentWorkingDirectory(username, Utils.EXPORT);
-            serverCredentials.setImportDirectory(importDirectory);
-            serverCredentials.setExportDirectory(exportDirectory);
-
-            ftpClientSaveData.execute(serverCredentials);
         }
 
-
+        String username = mySharedPref.getStringFromSharedPref(CodesUtil.USER_NAME);
+        String password = mySharedPref.getStringFromSharedPref(CodesUtil.PASSWORD);
+        String url = mySharedPref.getStringFromSharedPref(CodesUtil.URL);
+        String port = mySharedPref.getStringFromSharedPref(CodesUtil.PORT);
+        if(port.equals(MySharedPref.GET_STRING_FAILED)){
+            port  = "21";
+        }
+        Log.d("ServerSave", " username : " + username + " pass : " + password + " url : " + url + " port" + port);
+        ServerCredentials serverCredentials = new ServerCredentials(username.replace("\"", ""), password,url, Integer.valueOf(port));
+        String importDirectory = Utils.getAgentWorkingDirectory(username, Utils.IMPORT);
+        String exportDirectory = Utils.getAgentWorkingDirectory(username, Utils.EXPORT);
+        serverCredentials.setImportDirectory(importDirectory);
+        serverCredentials.setExportDirectory(exportDirectory);
+        ftpClientSaveData.execute(serverCredentials);
     }
 }

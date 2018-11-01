@@ -56,7 +56,7 @@ public class DocRig {
                 .append(omaggio).append(";")
                 .append(desDocRig).append(";")
                 .append(lotto).append(";")
-                .append(noteRiga).append(System.lineSeparator());
+                .append(noteRiga);
         return stringBuilder.toString();
     }
 

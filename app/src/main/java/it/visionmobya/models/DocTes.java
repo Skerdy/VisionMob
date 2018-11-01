@@ -52,7 +52,7 @@ public class DocTes {
                 .append(codiceSconto).append(";")
                 .append(dataCons).append(";")
                 .append(noteTesta).append(";")
-                .append(acconto).append(System.lineSeparator());
+                .append(acconto);
 
         return stringBuilder.toString();
     }

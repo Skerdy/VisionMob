@@ -106,7 +106,7 @@ public class CSVWriter {
         }
 
         else if(record instanceof DocRig){
-            csv=((DocRig)record).toCSVRecord();
+            csv = ((DocRig)record).toCSVRecord();
             if(!pathSpecified){
                 filePath = filePath + EXPORT_DIR +"/" + TextFiles.DOCRIG;
             }
@@ -140,7 +140,7 @@ public class CSVWriter {
 
         Writer writer = new PrintWriter(new FileOutputStream(new File(filePath), true));
         printWriter = new PrintWriter(writer, true);
-        csvPrinter = new CSVPrinter(printWriter,CSVFormat.DEFAULT.withRecordSeparator(System.lineSeparator()));
+        csvPrinter = new CSVPrinter(printWriter,CSVFormat.DEFAULT.withRecordSeparator(System.lineSeparator()).withQuote(null));
         csvPrinter.printRecord(csv.replace("\"", ""));
         printWriter.close();
         csvPrinter.close();

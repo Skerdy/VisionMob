@@ -78,6 +78,7 @@ public class FtpClientSaveData extends AsyncTask<ServerCredentials,String, FtpRe
                     ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
                     ftpClient.enterLocalPassiveMode();
                     ftpClient.setAutodetectUTF8(true);
+                    ftpClient.setFileType(FTP.ASCII_FILE_TYPE);
                     String exportDirectory = Utils.getAgentWorkingDirectory(USERNAME, Utils.EXPORT);
                     ftpClient.changeWorkingDirectory(exportDirectory);
                     for(String filename : filenames) {
