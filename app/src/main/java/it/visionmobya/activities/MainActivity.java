@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -51,6 +52,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             serverCredentials.setExportDirectory(exportDirectory);
             mySharedPref.saveObjectToSharedPreference(CodesUtil.SERVER_CREDENTIALS_OBJECT, serverCredentials);
             new LoadFilesTask().execute();
+        }
+
+        if(getIntent().getStringExtra(CodesUtil.REDIRECT_FILE_SAVE) != null){
+            if(getIntent().getStringExtra(CodesUtil.REDIRECT_FILE_SAVE).equals(CodesUtil.SUCCESS_MESSAGE)){
+                Snackbar.make(relNewDoc,"The files were succesfully uploaded!", Snackbar.LENGTH_LONG)
+                        .show();
+            }
         }
     }
 

@@ -16,4 +16,6 @@ public class CodesUtil {
     public static final String PASSWORD = "passwordvisonmobya";
     public static final String URL = "urlvisionmobya";
     public static final String PORT = "portvisionmobya";
+    public static final String REDIRECT_FILE_SAVE ="eredirectfilesave" ;
+    public static final String SUCCESS_MESSAGE = "successmessageaftersavingdatainftpserver";
 }

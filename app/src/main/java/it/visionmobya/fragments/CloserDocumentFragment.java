@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
@@ -45,6 +46,7 @@ import it.visionmobya.models.customModels.ServerCredentials;
 import it.visionmobya.utils.CodesUtil;
 import it.visionmobya.utils.MySharedPref;
 import it.visionmobya.utils.Utils;
+import it.visionmobya.utils.ValidatorHelper;
 
 public class CloserDocumentFragment extends Fragment implements DatePickerDialog.OnDateSetListener , TimePickerDialog.OnTimeSetListener, OnSaveAndPrintButtonListener {
 
@@ -64,6 +66,7 @@ public class CloserDocumentFragment extends Fragment implements DatePickerDialog
     private Date documentDate ;
     private Client selectedClient;
     private MySharedPref  mySharedPref;
+    private MaterialDialog materialDialog;
 
     public static CloserDocumentFragment newInstance(DocumentCategory documentCategory, Date documentDate, Client selectedClient) {
         CloserDocumentFragment closerDocumentFragment = new CloserDocumentFragment();
@@ -88,6 +91,12 @@ public class CloserDocumentFragment extends Fragment implements DatePickerDialog
         ((OrdineClienteActivity)getActivity()).setOnSaveAndPrintButtonListener(this);
 
         mySharedPref = new MySharedPref(getActivity());
+
+
+         materialDialog = new MaterialDialog.Builder(getActivity())
+                .title("Error")
+                .content("Please do not leave blank fields while filling article data").positiveText("Ok")
+                 .build();
     }
 
     @Override
@@ -166,7 +175,11 @@ public class CloserDocumentFragment extends Fragment implements DatePickerDialog
         alertDialog.setMessage("Sei sicuro di salvare il documento?");
         alertDialog.setPositiveButton("Si", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
+                if(ValidatorHelper.areDocumentsEligibleForDocumentClosure(documentStates))
                 generateDocRigaAndTesta();
+                else{
+                    materialDialog.show();
+                }
             }
         });
         alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {

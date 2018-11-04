@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
@@ -31,6 +32,7 @@ import it.visionmobya.activities.OrdineClienteActivity;
 import it.visionmobya.models.customModels.FtpResponse;
 import it.visionmobya.models.customModels.ServerCredentials;
 import it.visionmobya.models.customModels.ServerRequest;
+import it.visionmobya.utils.CodesUtil;
 import it.visionmobya.utils.Utils;
 
 public class FtpClientSaveData extends AsyncTask<ServerCredentials,String, FtpResponse> {
@@ -109,6 +111,7 @@ public class FtpClientSaveData extends AsyncTask<ServerCredentials,String, FtpRe
 
         if(ftpResponse.getResponseCode()==FtpResponse.STATUS_OK){
             Intent intent = new Intent(context, MainActivity.class);
+            intent.putExtra(CodesUtil.REDIRECT_FILE_SAVE, CodesUtil.SUCCESS_MESSAGE);
             context.startActivity(intent);
             ((OrdineClienteActivity)context).finish();
         }

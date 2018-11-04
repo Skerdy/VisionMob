@@ -1,7 +1,0 @@
-ORDCL;Ordine Cliente                ;O;15
-PREV ;Preventivo                    ;P;20
-DDTVE;D.D.T. c/to VENDITA           ;B;43
-FTVE ;Fattura di vendita            ;F;43
-RAPLA;Rapportino di Lavoro          ;R;3
-CPTCL;Carico da Prod. Esterna       ;G;38
-

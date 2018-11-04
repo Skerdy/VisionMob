@@ -205,6 +205,7 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
         end_documentoTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 showCloseDocumento();
             }
         });
@@ -331,6 +332,15 @@ public class OrdineClienteActivity extends AppCompatActivity implements DatePick
     //metode qe thirret nga fragmenti i article row
     public void showDialog(){
         recyclerViewDialog.show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+         if (recyclerViewDialog != null) {
+             recyclerViewDialog.dismiss();
+             recyclerViewDialog = null;
+         }
     }
 
     //metode qe thirret nga fragmenti i article row
