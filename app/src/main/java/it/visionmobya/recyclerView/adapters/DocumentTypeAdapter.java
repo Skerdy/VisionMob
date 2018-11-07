@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import it.visionmobya.R;
-import it.visionmobya.listener.OnClientClickListener;
 import it.visionmobya.listener.OnDocumentClickListener;
 import it.visionmobya.models.DocumentCategory;
 import it.visionmobya.recyclerView.viewholders.DocumentTypeViewHolder;
@@ -19,7 +18,7 @@ public class DocumentTypeAdapter extends RecyclerView.Adapter<DocumentTypeViewHo
     private List<DocumentCategory> documentCategories;
     private OnDocumentClickListener onDocumentClickListener;
 
-    public DocumentTypeAdapter(List<DocumentCategory> documentCategories, OnDocumentClickListener onDocumentClickListener){
+    public DocumentTypeAdapter(List<DocumentCategory> documentCategories, OnDocumentClickListener onDocumentClickListener) {
         this.documentCategories = documentCategories;
         this.onDocumentClickListener = onDocumentClickListener;
     }
@@ -46,7 +45,7 @@ public class DocumentTypeAdapter extends RecyclerView.Adapter<DocumentTypeViewHo
 
     @Override
     public int getItemCount() {
-        return documentCategories.size();
+        return documentCategories == null ? 0 : documentCategories.size();
     }
 
     public void setDocumentCategories(List<DocumentCategory> documentCategories) {

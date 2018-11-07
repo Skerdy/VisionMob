@@ -5,43 +5,36 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import it.visionmobya.CSVModule.TextFiles;
-import it.visionmobya.CSVModule.VisionFileManager;
 import it.visionmobya.R;
-import it.visionmobya.activities.LoginActivity;
 import it.visionmobya.activities.MainActivity;
 import it.visionmobya.activities.OrdineClienteActivity;
 import it.visionmobya.models.customModels.FtpResponse;
 import it.visionmobya.models.customModels.ServerCredentials;
-import it.visionmobya.models.customModels.ServerRequest;
 import it.visionmobya.utils.CodesUtil;
 import it.visionmobya.utils.Utils;
 
-public class FtpClientSaveData extends AsyncTask<ServerCredentials,String, FtpResponse> {
+public class FtpClientSaveData extends AsyncTask<ServerCredentials, String, FtpResponse> {
 
 
     private ServerCredentials serverCredential;
     private FTPClient ftpClient;
     private Context context;
-    private List<String>  filenames ;
+    private List<String> filenames;
     private ProgressDialog progressDialog;
 
     public FtpClientSaveData(Context context) {
@@ -76,18 +69,18 @@ public class FtpClientSaveData extends AsyncTask<ServerCredentials,String, FtpRe
             ftpClient.connect(SERVER_URL, SERVER_PORT);
             if (FTPReply.isPositiveCompletion(ftpClient.getReplyCode())) {
                 status = ftpClient.login(USERNAME, PASSWORD);
-                if (status){
+                if (status) {
                     ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
                     ftpClient.enterLocalPassiveMode();
                     ftpClient.setAutodetectUTF8(true);
                     ftpClient.setFileType(FTP.ASCII_FILE_TYPE);
                     String exportDirectory = Utils.getAgentWorkingDirectory(USERNAME, Utils.EXPORT);
                     ftpClient.changeWorkingDirectory(exportDirectory);
-                    for(String filename : filenames) {
+                    for (String filename : filenames) {
                         Log.d("SaveServer", " Po behet save i : " + filename);
                         File file = new File(context.getFilesDir().getAbsolutePath() + "/" + Utils.EXPORT + "/" + filename);
                         InputStream fileStream = new FileInputStream(file);
-                        boolean uploaded = ftpClient.storeFile(filename, fileStream );
+                        boolean uploaded = ftpClient.storeFile(filename, fileStream);
                         Log.d("SaveServer", " Store success " + filename + " " + uploaded);
                         fileStream.close();
                     }
@@ -96,10 +89,9 @@ public class FtpClientSaveData extends AsyncTask<ServerCredentials,String, FtpRe
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if(status) {
+        if (status) {
             return new FtpResponse(FtpResponse.STATUS_OK);
-        }
-        else {
+        } else {
             return new FtpResponse(FtpResponse.STATUS_FAIL);
         }
     }
@@ -109,13 +101,12 @@ public class FtpClientSaveData extends AsyncTask<ServerCredentials,String, FtpRe
         super.onPostExecute(ftpResponse);
         progressDialog.dismiss();
 
-        if(ftpResponse.getResponseCode()==FtpResponse.STATUS_OK){
+        if (ftpResponse.getResponseCode() == FtpResponse.STATUS_OK) {
             Intent intent = new Intent(context, MainActivity.class);
             intent.putExtra(CodesUtil.REDIRECT_FILE_SAVE, CodesUtil.SUCCESS_MESSAGE);
             context.startActivity(intent);
-            ((OrdineClienteActivity)context).finish();
-        }
-        else {
+            ((OrdineClienteActivity) context).finish();
+        } else {
             final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context, R.style.AlertDialogBox);
             alertDialog.setTitle("Failure!");
             alertDialog.setMessage("Connecting to the server failed");

@@ -30,10 +30,10 @@ import it.visionmobya.models.Payment;
 import it.visionmobya.models.Vat;
 
 
-
-
 public class VisionFileManager {
 
+    @SuppressLint("StaticFieldLeak")
+    private static VisionFileManager visionFileManager;
     private Context context;
     private ProgressBarMessage progressBarMessage;
     private List<Article> articles;
@@ -44,21 +44,18 @@ public class VisionFileManager {
     private List<Listino> listinos;
     private List<DocumentCategory> documentCategories;
 
-    @SuppressLint("StaticFieldLeak")
-    private static VisionFileManager visionFileManager;
-
-    private VisionFileManager(){
+    private VisionFileManager() {
 
     }
 
-    public static synchronized VisionFileManager getInstance(){
-            if(visionFileManager==null){
-                visionFileManager = new VisionFileManager();
-            }
+    public static synchronized VisionFileManager getInstance() {
+        if (visionFileManager == null) {
+            visionFileManager = new VisionFileManager();
+        }
         return visionFileManager;
     }
 
-    public void init(Context context, ProgressBarMessage progressBarMessage){
+    public void init(Context context, ProgressBarMessage progressBarMessage) {
 
         this.context = context;
         this.progressBarMessage = progressBarMessage;
@@ -96,7 +93,7 @@ public class VisionFileManager {
     }
 
     private CSVParser getParserForFile(String filename) throws IOException {
-        return new CSVParser(getReader(new FileInputStream(this.context.getFilesDir().getAbsolutePath()+"/" + filename)), CSVFormat.DEFAULT);
+        return new CSVParser(getReader(new FileInputStream(this.context.getFilesDir().getAbsolutePath() + "/" + filename)), CSVFormat.DEFAULT);
     }
 
     //kjo metode kthen listen me rekorde te nje parseri ne varesi te inputit qe i japim
@@ -105,35 +102,35 @@ public class VisionFileManager {
     }
 
     //kjo metode kthen listen me kliente nga rekorded
-    private List<Client> getClientsFromRecords(List<CSVRecord> records){
+    private List<Client> getClientsFromRecords(List<CSVRecord> records) {
         List<Client> clients = new ArrayList<>();
-        for(CSVRecord csvRecord : records){
+        for (CSVRecord csvRecord : records) {
             clients.add(CustomConverter.getClientFromCSVRecord(csvRecord));
         }
         return clients;
     }
 
-   // kjo metode kthen kategorite e dokumenteve
-    private List<DocumentCategory> getDocumentCategoriesFromRecords(List<CSVRecord> records){
+    // kjo metode kthen kategorite e dokumenteve
+    private List<DocumentCategory> getDocumentCategoriesFromRecords(List<CSVRecord> records) {
         List<DocumentCategory> documentCategories = new ArrayList<>();
-        for(CSVRecord csvRecord : records) {
+        for (CSVRecord csvRecord : records) {
             documentCategories.add(CustomConverter.getDocumentTypeFromRecord(csvRecord));
         }
         return documentCategories;
     }
 
     //kjo metode kthen gjithe kategorite
-    private List<ArticleCategory> getArticleCategoriesFromRecords(List<CSVRecord> records){
+    private List<ArticleCategory> getArticleCategoriesFromRecords(List<CSVRecord> records) {
         List<ArticleCategory> articleCategories = new ArrayList<>();
-        for(CSVRecord csvRecord : records){
+        for (CSVRecord csvRecord : records) {
             articleCategories.add(CustomConverter.getArticleCategoryFromCSVRecord(csvRecord));
         }
         return articleCategories;
     }
 
-    private List<Article> getArticlesFromRecords(List<CSVRecord> records){
+    private List<Article> getArticlesFromRecords(List<CSVRecord> records) {
         List<Article> articles = new ArrayList<>();
-        for(CSVRecord csvRecord : records){
+        for (CSVRecord csvRecord : records) {
             articles.add(CustomConverter.getArticleFromRecord(csvRecord));
         }
         return articles;
@@ -141,7 +138,7 @@ public class VisionFileManager {
 
     private List<Expiration> getExpirationsFromRecords(List<CSVRecord> records) {
         List<Expiration> expirations = new ArrayList<>();
-        for(CSVRecord csvRecord : records) {
+        for (CSVRecord csvRecord : records) {
             expirations.add(CustomConverter.getExpirationFromRecord(csvRecord));
         }
         return expirations;
@@ -149,15 +146,15 @@ public class VisionFileManager {
 
     private List<History> getHistoryFromRecords(List<CSVRecord> records) {
         List<History> histories = new ArrayList<>();
-        for(CSVRecord csvRecord : records){
+        for (CSVRecord csvRecord : records) {
             histories.add(CustomConverter.getHistoryFromRecord(csvRecord));
         }
         return histories;
     }
 
-    private List<Listino> getListinoFromRecords(List<CSVRecord> records){
+    private List<Listino> getListinoFromRecords(List<CSVRecord> records) {
         List<Listino> listinos = new ArrayList<>();
-        for(CSVRecord csvRecord : records){
+        for (CSVRecord csvRecord : records) {
             listinos.add(CustomConverter.getListinoFromRecord(csvRecord));
         }
         return listinos;
@@ -165,54 +162,53 @@ public class VisionFileManager {
 
     private List<Lotti> getLottiFromRecords(List<CSVRecord> records) {
         List<Lotti> lottis = new ArrayList<>();
-        for(CSVRecord csvRecord : records){
+        for (CSVRecord csvRecord : records) {
             lottis.add(CustomConverter.getLottiFromRecord(csvRecord));
         }
         return lottis;
     }
 
-    private List<Payment> getPaymentFromRecords(List<CSVRecord> records){
+    private List<Payment> getPaymentFromRecords(List<CSVRecord> records) {
         List<Payment> payments = new ArrayList<>();
-        for(CSVRecord csvRecord : records){
+        for (CSVRecord csvRecord : records) {
             payments.add(CustomConverter.getPaymentFromRecord(csvRecord));
         }
         return payments;
     }
 
-    private List<Vat> getVatsFromRecords(List<CSVRecord> records){
+    private List<Vat> getVatsFromRecords(List<CSVRecord> records) {
         List<Vat> vats = new ArrayList<>();
-        for (CSVRecord csvRecord : records){
+        for (CSVRecord csvRecord : records) {
             vats.add(CustomConverter.getVatFromRecord(csvRecord));
         }
         return vats;
     }
 
-    private List<DocRig> getDocRigasFromRecords(List<CSVRecord> records){
+    private List<DocRig> getDocRigasFromRecords(List<CSVRecord> records) {
         List<DocRig> docRigs = new ArrayList<>();
-        for(CSVRecord csvRecord : records){
+        for (CSVRecord csvRecord : records) {
             docRigs.add(CustomConverter.getDocRigFromRecord(csvRecord));
         }
         return docRigs;
     }
 
-    private List<DocTes> getDocTestasFromRecords(List<CSVRecord> records){
+    private List<DocTes> getDocTestasFromRecords(List<CSVRecord> records) {
         List<DocTes> docTestas = new ArrayList<>();
-        for(CSVRecord csvRecord : records){
+        for (CSVRecord csvRecord : records) {
             docTestas.add(CustomConverter.getDocTesFromRecords(csvRecord));
         }
         return docTestas;
     }
 
-    public List<Article> getArticlesWithCategoryId(String Id){
+    public List<Article> getArticlesWithCategoryId(String Id) {
         List<Article> result = new ArrayList<>();
-        for(Article article : articles){
-            if(article.getCodiceCategoria().equals(Id)){
+        for (Article article : articles) {
+            if (article.getCodiceCategoria().equals(Id)) {
                 result.add(article);
             }
         }
         return result;
     }
-
 
 
     private List<Article> getAllArticles() throws IOException {
@@ -227,11 +223,11 @@ public class VisionFileManager {
         return getClientsFromRecords(getRecordsForParser(getParserForFile(TextFiles.ANAGRAFE)));
     }
 
-    private List<DocumentCategory> getAllDocumentCategories() throws IOException{
+    private List<DocumentCategory> getAllDocumentCategories() throws IOException {
         return getDocumentCategoriesFromRecords(getRecordsForParser(getParserForFile(TextFiles.DOCANA)));
     }
 
-    private List<Expiration> getAllExpirations() throws IOException{
+    private List<Expiration> getAllExpirations() throws IOException {
         return getExpirationsFromRecords(getRecordsForParser(getParserForFile(TextFiles.SCADENZE)));
     }
 
@@ -239,15 +235,15 @@ public class VisionFileManager {
         return getPaymentFromRecords(getRecordsForParser(getParserForFile(TextFiles.PAGAMENTI)));
     }
 
-    private List<Vat> getAllVats() throws IOException{
+    private List<Vat> getAllVats() throws IOException {
         return getVatsFromRecords(getRecordsForParser(getParserForFile(TextFiles.ALIQUOTE)));
     }
 
-    private List<Listino> getAllListinos() throws IOException{
+    private List<Listino> getAllListinos() throws IOException {
         return getListinoFromRecords(getRecordsForParser(getParserForFile(TextFiles.LISTINI)));
     }
 
-    private List<History> getAllHistories() throws IOException{
+    private List<History> getAllHistories() throws IOException {
         return getHistoryFromRecords(getRecordsForParser(getParserForFile(TextFiles.HISTORY)));
     }
 
@@ -256,48 +252,44 @@ public class VisionFileManager {
     }
 
     public List<DocRig> getAllDocumentRigas() throws IOException {
-        return getDocRigasFromRecords(getRecordsForParser(getParserForFile("export/" +TextFiles.DOCRIG)));
+        return getDocRigasFromRecords(getRecordsForParser(getParserForFile("export/" + TextFiles.DOCRIG)));
     }
 
-    public List<DocTes> getAllDocumentTestas() throws IOException{
-        return getDocTestasFromRecords(getRecordsForParser(getParserForFile("export/" +TextFiles.DOCTES)));
+    public List<DocTes> getAllDocumentTestas() throws IOException {
+        return getDocTestasFromRecords(getRecordsForParser(getParserForFile("export/" + TextFiles.DOCTES)));
     }
 
 
-    public void transformObjectsWithCommaFields(String specialChar){
+    public void transformObjectsWithCommaFields(String specialChar) {
         transformArticlesWithCommaFields(specialChar);
         transformClientsWithCommaFields(specialChar);
     }
 
 
-    private void transformArticlesWithCommaFields(String specialChar){
-        for(Article article : this.articles){
-            article.setDescrizione(article.getDescrizione().replace(specialChar , ","));
+    private void transformArticlesWithCommaFields(String specialChar) {
+        for (Article article : this.articles) {
+            article.setDescrizione(article.getDescrizione().replace(specialChar, ","));
             article.setCodiceArticolo(article.getCodiceArticolo().replace(specialChar, ","));
-            article.setCodiceUnitaDiMisura( article.getCodiceUnitaDiMisura().replace(specialChar,","));
-            article.setCodiceCategoria(article.getCodiceCategoria().replace(specialChar,","));
-            article.setListino1(article.getListino1().replace(specialChar,","));
-            article.setListino2(article.getListino2().replace(specialChar,","));
-            article.setListino3(article.getListino3().replace(specialChar,","));
-            article.setListino4(article.getListino4().replace(specialChar,","));
-            article.setListino5(article.getListino5().replace(specialChar,","));
-            article.setListino6(article.getListino6().replace(specialChar,","));
-            article.setListino7(article.getListino7().replace(specialChar,","));
-            article.setListino8(article.getListino8().replace(specialChar,","));
-            article.setListino9(article.getListino9().replace(specialChar,","));
+            article.setCodiceUnitaDiMisura(article.getCodiceUnitaDiMisura().replace(specialChar, ","));
+            article.setCodiceCategoria(article.getCodiceCategoria().replace(specialChar, ","));
+            article.setListino1(article.getListino1().replace(specialChar, ","));
+            article.setListino2(article.getListino2().replace(specialChar, ","));
+            article.setListino3(article.getListino3().replace(specialChar, ","));
+            article.setListino4(article.getListino4().replace(specialChar, ","));
+            article.setListino5(article.getListino5().replace(specialChar, ","));
+            article.setListino6(article.getListino6().replace(specialChar, ","));
+            article.setListino7(article.getListino7().replace(specialChar, ","));
+            article.setListino8(article.getListino8().replace(specialChar, ","));
+            article.setListino9(article.getListino9().replace(specialChar, ","));
         }
     }
 
-    private void transformClientsWithCommaFields(String specialChar){
-        for(Client client : this.clients){
-            client.setCodiceCliente(client.getCodiceCliente().replace(specialChar,","));
-            client.setIndirizzo(client.getIndirizzo().replace(specialChar,","));
+    private void transformClientsWithCommaFields(String specialChar) {
+        for (Client client : this.clients) {
+            client.setCodiceCliente(client.getCodiceCliente().replace(specialChar, ","));
+            client.setIndirizzo(client.getIndirizzo().replace(specialChar, ","));
         }
     }
-
-
-
-
 
 
     //metodat publike per marrjen e te dhenave nga listat e mbushura ne runtime ne instancen e vetme te Vision manager te inicializuar ne login ose ne reLogin.

@@ -4,7 +4,11 @@ import android.util.Log;
 import android.widget.Toast;
 
 import it.visionmobya.controllers.AliquoteController;
+import it.visionmobya.controllers.ArticleController;
+import it.visionmobya.controllers.ListinoController;
 import it.visionmobya.models.Article;
+import it.visionmobya.models.Client;
+import it.visionmobya.models.Listino;
 import it.visionmobya.models.Vat;
 import it.visionmobya.models.customModels.DocumentState;
 
@@ -14,7 +18,7 @@ public class DocumentStateHelper {
 
 
     //sets Article, and the sconto percentuale
-    public static void selectArticleAction(DocumentState documentState, Article article){
+    public static void selectArticleAction(DocumentState documentState, Article article, Client client){
         documentState.setArticle(article);
 
        //set document state sconto percentuale value
@@ -29,8 +33,18 @@ public class DocumentStateHelper {
                 documentState.setScontoPercentuale(Double.valueOf(article.getPercentualeDiSconto2()));
                 break;
             case NO_SCONTO_PERCENTUALE_FOUND:
-                documentState.setScontoPercentuale(30.0);
+                documentState.setScontoPercentuale(0.0);
                 break ;
+        }
+
+        // set document state price suggestion  ( first check if there is a listino combination of client and article if not
+        // just set the client default listino for any product
+         Double price = ListinoController.getArticlePriceForClient(client,article);
+        if(price!=null){
+            documentState.setPrezzoUnitario(price);
+        }
+        else {
+            documentState.setPrezzoUnitario(ArticleController.getArticlePriceFromClientListino(client,article));
         }
     }
 

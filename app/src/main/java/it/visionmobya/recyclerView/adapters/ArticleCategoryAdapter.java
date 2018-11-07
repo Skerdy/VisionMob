@@ -5,11 +5,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import java.util.List;
+
 import it.visionmobya.R;
 import it.visionmobya.listener.OnArticleCategoryClickListener;
-import it.visionmobya.listener.OnArticleClickListener;
-import it.visionmobya.listener.OnClientClickListener;
 import it.visionmobya.models.ArticleCategory;
 import it.visionmobya.recyclerView.viewholders.ArticleCategoryViewHolder;
 

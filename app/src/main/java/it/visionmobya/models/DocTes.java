@@ -1,7 +1,5 @@
 package it.visionmobya.models;
 
-import org.apache.commons.csv.CSVRecord;
-
 public class DocTes {
 
     private String idTesta;

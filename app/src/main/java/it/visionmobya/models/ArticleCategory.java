@@ -2,10 +2,10 @@ package it.visionmobya.models;
 
 public class ArticleCategory {
 
-    private String id ;
+    private String id;
     private String name;
 
-    public ArticleCategory(){
+    public ArticleCategory() {
 
     }
 
@@ -14,7 +14,7 @@ public class ArticleCategory {
         this.name = name;
     }
 
-    public String toCsvRecord(){
+    public String toCsvRecord() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(id).append(";")
                 .append(name);

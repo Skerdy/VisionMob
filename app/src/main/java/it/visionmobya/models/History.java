@@ -15,6 +15,10 @@ public class History {
         return codiceDocumento;
     }
 
+    public void setCodiceDocumento(String codiceDocumento) {
+        this.codiceDocumento = codiceDocumento;
+    }
+
     public String toCsvRecord() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(codiceDocumento).append(";")
@@ -26,10 +30,6 @@ public class History {
                 .append(quantità).append(";")
                 .append(prezzoNetto);
         return stringBuilder.toString();
-    }
-
-    public void setCodiceDocumento(String codiceDocumento) {
-        this.codiceDocumento = codiceDocumento;
     }
 
     public String getNumeroDocumento() {

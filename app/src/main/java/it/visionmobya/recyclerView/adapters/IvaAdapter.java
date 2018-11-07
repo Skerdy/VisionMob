@@ -19,7 +19,7 @@ public class IvaAdapter extends RecyclerView.Adapter<IvaViewHolder> {
     private List<Vat> vatList;
 
 
-    public IvaAdapter(Context context, List<Vat> vatList){
+    public IvaAdapter(Context context, List<Vat> vatList) {
         this.context = context;
         this.vatList = vatList;
     }

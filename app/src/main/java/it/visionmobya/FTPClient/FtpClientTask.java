@@ -19,9 +19,9 @@ import java.io.OutputStream;
 
 import it.visionmobya.CSVModule.VisionFileManager;
 import it.visionmobya.Interface.ProgressBarMessage;
+import it.visionmobya.R;
 import it.visionmobya.activities.LoginActivity;
 import it.visionmobya.activities.MainActivity;
-import it.visionmobya.R;
 import it.visionmobya.models.customModels.FtpResponse;
 import it.visionmobya.models.customModels.ServerRequest;
 import it.visionmobya.utils.CodesUtil;
@@ -37,7 +37,7 @@ public class FtpClientTask extends AsyncTask<ServerRequest, String, FtpResponse>
     private MySharedPref mySharedPref;
 
 
-    public FtpClientTask(Context context){
+    public FtpClientTask(Context context) {
         this.context = context;
         progressDialog = new ProgressDialog(context);
         mySharedPref = new MySharedPref(context);
@@ -55,18 +55,18 @@ public class FtpClientTask extends AsyncTask<ServerRequest, String, FtpResponse>
 
     @Override
     protected FtpResponse doInBackground(ServerRequest... serverRequests) {
-       this.serverRequest = serverRequests[0];
-       String SERVER_URL = serverRequest.getServerCredentials().getServerUrl();
-       Integer SERVER_PORT = serverRequest.getServerCredentials().getPort();
-       String USERNAME = serverRequest.getServerCredentials().getUsername();
-       String PASSWORD = serverRequest.getServerCredentials().getPassword();
-       boolean status = false;
-       ftpClient = new FTPClient();
+        this.serverRequest = serverRequests[0];
+        String SERVER_URL = serverRequest.getServerCredentials().getServerUrl();
+        Integer SERVER_PORT = serverRequest.getServerCredentials().getPort();
+        String USERNAME = serverRequest.getServerCredentials().getUsername();
+        String PASSWORD = serverRequest.getServerCredentials().getPassword();
+        boolean status = false;
+        ftpClient = new FTPClient();
         try {
             ftpClient.connect(SERVER_URL, SERVER_PORT);
             if (FTPReply.isPositiveCompletion(ftpClient.getReplyCode())) {
                 status = ftpClient.login(USERNAME, PASSWORD);
-                if (status){
+                if (status) {
 
                     ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
                     ftpClient.enterLocalPassiveMode();
@@ -76,7 +76,7 @@ public class FtpClientTask extends AsyncTask<ServerRequest, String, FtpResponse>
                     //iterojme per sa filename kemi futur si parameter dhe per cdo filename krijojme nje file dhe e kthejme mbrapsht tek metoda on PostExecute
                     for (String filename : serverRequest.getFilename()) {
                         // bufferedInputStream = new BufferedInputStream(new FileInputStream(SERVER_URL+filename));
-                        try (OutputStream os = serverRequest.getContext().openFileOutput( filename, 0)) {
+                        try (OutputStream os = serverRequest.getContext().openFileOutput(filename, 0)) {
                             boolean retrieved = ftpClient.retrieveFile(filename, os);
                             Log.d("SaveFile", "File : " + filename + " retrieved : " + retrieved);
                         } catch (IOException e) {
@@ -87,8 +87,8 @@ public class FtpClientTask extends AsyncTask<ServerRequest, String, FtpResponse>
                     //marrim edhe filet export per sinkronizim te metejshem nese ekzistojne
                     ftpClient.changeToParentDirectory();
                     ftpClient.changeWorkingDirectory(serverRequest.getServerCredentials().getExportDirectory());
-                    for(String filename : ftpClient.listNames()){
-                        File file = new File(context.getFilesDir().getAbsolutePath() + "/" + Utils.EXPORT + "/"+filename);
+                    for (String filename : ftpClient.listNames()) {
+                        File file = new File(context.getFilesDir().getAbsolutePath() + "/" + Utils.EXPORT + "/" + filename);
                         // bufferedInputStream = new BufferedInputStream(new FileInputStream(SERVER_URL+filename));
                         try (OutputStream os = new FileOutputStream(file, true)) {
                             boolean retrieved = ftpClient.retrieveFile(filename, os);
@@ -97,18 +97,17 @@ public class FtpClientTask extends AsyncTask<ServerRequest, String, FtpResponse>
                             e.printStackTrace();
                         }
                     }
-                  }
                 }
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if(status) {
-            VisionFileManager.getInstance().init( context, this);
+        if (status) {
+            VisionFileManager.getInstance().init(context, this);
             return new FtpResponse(FtpResponse.STATUS_OK);
-        }
-        else
-         return new FtpResponse(FtpResponse.STATUS_FAIL);
+        } else
+            return new FtpResponse(FtpResponse.STATUS_FAIL);
     }
 
     @Override
@@ -118,12 +117,11 @@ public class FtpClientTask extends AsyncTask<ServerRequest, String, FtpResponse>
         mySharedPref.saveObjectToSharedPreference(CodesUtil.USER_NAME, serverRequest.getServerCredentials().getUsername());
         mySharedPref.saveObjectToSharedPreference(CodesUtil.LOGGED_IN, true);
 
-        if(ftpResponse.getResponseCode()==FtpResponse.STATUS_OK){
+        if (ftpResponse.getResponseCode() == FtpResponse.STATUS_OK) {
             Intent intent = new Intent(serverRequest.getContext(), MainActivity.class);
             serverRequest.getContext().startActivity(intent);
-            ((LoginActivity)serverRequest.getContext()).finish();
-        }
-        else {
+            ((LoginActivity) serverRequest.getContext()).finish();
+        } else {
             final AlertDialog.Builder alertDialog = new AlertDialog.Builder(context, R.style.AlertDialogBox);
             alertDialog.setTitle("Failure!");
             alertDialog.setMessage("Connecting to the server failed");
@@ -138,7 +136,7 @@ public class FtpClientTask extends AsyncTask<ServerRequest, String, FtpResponse>
     }
 
     @Override
-    public void onLoadFile( String progressMessage) {
+    public void onLoadFile(String progressMessage) {
         publishProgress(progressMessage);
     }
 

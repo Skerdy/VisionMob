@@ -10,7 +10,7 @@ public class ServerRequest {
     private ServerCredentials serverCredentials;
     private List<String> filenames;
 
-    public ServerRequest(Context context,ServerCredentials serverCredentials, List<String> filename) {
+    public ServerRequest(Context context, ServerCredentials serverCredentials, List<String> filename) {
         this.context = context;
         this.serverCredentials = serverCredentials;
         this.filenames = filename;

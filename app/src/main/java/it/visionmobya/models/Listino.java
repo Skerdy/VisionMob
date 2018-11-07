@@ -12,21 +12,7 @@ public class Listino {
     private String dataInizioListino;
     private String dataFineListino;
 
-    public String toCsvRecord() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(idListino).append(";")
-                .append(codiceArticolo).append(";")
-                .append(codiceCliente).append(";")
-                .append(codiceDestinazioneDiversa).append(";")
-                .append(codiceCategoriaArticolo).append(";")
-                .append(prezzo).append(";")
-                .append(sconto).append(";")
-                .append(dataInizioListino).append(";")
-                .append(dataFineListino);
-        return stringBuilder.toString();
-    }
-
-    public Listino(){
+    public Listino() {
 
     }
 
@@ -40,6 +26,20 @@ public class Listino {
         this.sconto = sconto;
         this.dataInizioListino = dataInizioListino;
         this.dataFineListino = dataFineListino;
+    }
+
+    public String toCsvRecord() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(idListino).append(";")
+                .append(codiceArticolo).append(";")
+                .append(codiceCliente).append(";")
+                .append(codiceDestinazioneDiversa).append(";")
+                .append(codiceCategoriaArticolo).append(";")
+                .append(prezzo).append(";")
+                .append(sconto).append(";")
+                .append(dataInizioListino).append(";")
+                .append(dataFineListino);
+        return stringBuilder.toString();
     }
 
     public String getIdListino() {

@@ -1,7 +1,5 @@
 package it.visionmobya.models.customModels;
 
-import android.content.Context;
-
 import java.io.Serializable;
 
 public class ServerCredentials implements Serializable {

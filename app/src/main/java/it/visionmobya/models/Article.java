@@ -7,6 +7,17 @@ import java.io.Serializable;
 
 public class Article implements Serializable, Parcelable {
 
+    public static final Creator<Article> CREATOR = new Creator<Article>() {
+        @Override
+        public Article createFromParcel(Parcel in) {
+            return new Article(in);
+        }
+
+        @Override
+        public Article[] newArray(int size) {
+            return new Article[size];
+        }
+    };
     private String codiceArticolo;
     private String descrizione;
     private String codiceUnitaDiMisura;
@@ -32,33 +43,32 @@ public class Article implements Serializable, Parcelable {
     private String FattorediConversione2;
     private String FattorediConversione3;
 
-
     public Article(ArticleBuilder articleBuilder) {
 
-        codiceArticolo=articleBuilder.codiceArticolo;
-        descrizione=articleBuilder.descrizione;
-        codiceUnitaDiMisura=articleBuilder.codiceUnitaDiMisura;
-        codiceCategoria=articleBuilder.codiceCategoria;
-        listino1=articleBuilder.listino1;
-        Listino2=articleBuilder.Listino2;
-        Listino3=articleBuilder.Listino3;
-        Listino4=articleBuilder.Listino4;
-        Listino5=articleBuilder.Listino5;
-        Listino6=articleBuilder.Listino6;
-        Listino7=articleBuilder.Listino7;
-        Listino8=articleBuilder.Listino8;
-        Listino9=articleBuilder.Listino9;
-        codiceIvaVendite=articleBuilder.codiceIvaVendite;
-        PercentualeDiSconto1=articleBuilder.PercentualeDiSconto1;
-        PercentualeDiSconto2=articleBuilder.PercentualeDiSconto2;
-        PercentualeDiSconto3=articleBuilder.PercentualeDiSconto3;
-        alias=articleBuilder.alias;
-        CodiceUnitàDiMisura1=articleBuilder.CodiceUnitàDiMisura1;
-        CodiceUnitàDiMisura2=articleBuilder.CodiceUnitàDiMisura2;
-        CodiceUnitàDiMisura3=articleBuilder.CodiceUnitàDiMisura3;
-        FattorediConversione1=articleBuilder.FattorediConversione1;
-        FattorediConversione2=articleBuilder.FattorediConversione2;
-        FattorediConversione3=articleBuilder.FattorediConversione3;
+        codiceArticolo = articleBuilder.codiceArticolo;
+        descrizione = articleBuilder.descrizione;
+        codiceUnitaDiMisura = articleBuilder.codiceUnitaDiMisura;
+        codiceCategoria = articleBuilder.codiceCategoria;
+        listino1 = articleBuilder.listino1;
+        Listino2 = articleBuilder.Listino2;
+        Listino3 = articleBuilder.Listino3;
+        Listino4 = articleBuilder.Listino4;
+        Listino5 = articleBuilder.Listino5;
+        Listino6 = articleBuilder.Listino6;
+        Listino7 = articleBuilder.Listino7;
+        Listino8 = articleBuilder.Listino8;
+        Listino9 = articleBuilder.Listino9;
+        codiceIvaVendite = articleBuilder.codiceIvaVendite;
+        PercentualeDiSconto1 = articleBuilder.PercentualeDiSconto1;
+        PercentualeDiSconto2 = articleBuilder.PercentualeDiSconto2;
+        PercentualeDiSconto3 = articleBuilder.PercentualeDiSconto3;
+        alias = articleBuilder.alias;
+        CodiceUnitàDiMisura1 = articleBuilder.CodiceUnitàDiMisura1;
+        CodiceUnitàDiMisura2 = articleBuilder.CodiceUnitàDiMisura2;
+        CodiceUnitàDiMisura3 = articleBuilder.CodiceUnitàDiMisura3;
+        FattorediConversione1 = articleBuilder.FattorediConversione1;
+        FattorediConversione2 = articleBuilder.FattorediConversione2;
+        FattorediConversione3 = articleBuilder.FattorediConversione3;
     }
 
     protected Article(Parcel in) {
@@ -120,18 +130,6 @@ public class Article implements Serializable, Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<Article> CREATOR = new Creator<Article>() {
-        @Override
-        public Article createFromParcel(Parcel in) {
-            return new Article(in);
-        }
-
-        @Override
-        public Article[] newArray(int size) {
-            return new Article[size];
-        }
-    };
 
     public String toCsvRecord() {
 
@@ -354,6 +352,36 @@ public class Article implements Serializable, Parcelable {
 
     public void setFattorediConversione3(String fattorediConversione3) {
         FattorediConversione3 = fattorediConversione3;
+    }
+
+    @Override
+    public String toString() {
+        return "Article{" +
+                "codiceArticolo='" + codiceArticolo + '\'' +
+                ", descrizione='" + descrizione + '\'' +
+                ", codiceUnitaDiMisura='" + codiceUnitaDiMisura + '\'' +
+                ", codiceCategoria='" + codiceCategoria + '\'' +
+                ", listino1='" + listino1 + '\'' +
+                ", Listino2='" + Listino2 + '\'' +
+                ", Listino3='" + Listino3 + '\'' +
+                ", Listino4='" + Listino4 + '\'' +
+                ", Listino5='" + Listino5 + '\'' +
+                ", Listino6='" + Listino6 + '\'' +
+                ", Listino7='" + Listino7 + '\'' +
+                ", Listino8='" + Listino8 + '\'' +
+                ", Listino9='" + Listino9 + '\'' +
+                ", codiceIvaVendite='" + codiceIvaVendite + '\'' +
+                ", PercentualeDiSconto1='" + PercentualeDiSconto1 + '\'' +
+                ", PercentualeDiSconto2='" + PercentualeDiSconto2 + '\'' +
+                ", PercentualeDiSconto3='" + PercentualeDiSconto3 + '\'' +
+                ", alias='" + alias + '\'' +
+                ", CodiceUnitàDiMisura1='" + CodiceUnitàDiMisura1 + '\'' +
+                ", CodiceUnitàDiMisura2='" + CodiceUnitàDiMisura2 + '\'' +
+                ", CodiceUnitàDiMisura3='" + CodiceUnitàDiMisura3 + '\'' +
+                ", FattorediConversione1='" + FattorediConversione1 + '\'' +
+                ", FattorediConversione2='" + FattorediConversione2 + '\'' +
+                ", FattorediConversione3='" + FattorediConversione3 + '\'' +
+                '}';
     }
 
     public static class ArticleBuilder {

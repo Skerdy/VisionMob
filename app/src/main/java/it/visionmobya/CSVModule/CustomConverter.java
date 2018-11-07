@@ -22,7 +22,7 @@ import it.visionmobya.models.Vat;
 
 public class CustomConverter {
 
-    public static ArticleCategory getArticleCategoryFromCSVRecord(CSVRecord csvRecord){
+    public static ArticleCategory getArticleCategoryFromCSVRecord(CSVRecord csvRecord) {
         ArticleCategory articleCategory = new ArticleCategory();
         String[] fields = csvRecord.get(0).split(";");
         articleCategory.setId(fields[0]);
@@ -30,11 +30,11 @@ public class CustomConverter {
         return articleCategory;
     }
 
-    public static Client getClientFromCSVRecord(CSVRecord csvRecord){
+    public static Client getClientFromCSVRecord(CSVRecord csvRecord) {
 
-        Log.d("Size" , "Size i rekord eshte:" + csvRecord.size());
-        Client client = new Client.ClientBuilder("","").build();
-        List<String > fields = getUnitStringsFromRecord(csvRecord);
+        Log.d("Size", "Size i rekord eshte:" + csvRecord.size());
+        Client client = new Client.ClientBuilder("", "").build();
+        List<String> fields = getUnitStringsFromRecord(csvRecord);
 
         client.setCodiceCliente(fields.get(0));
         client.setRagioneSociale(fields.get(1));
@@ -65,7 +65,7 @@ public class CustomConverter {
         return client;
     }
 
-    public static DocumentCategory getDocumentTypeFromRecord(CSVRecord csvRecord){
+    public static DocumentCategory getDocumentTypeFromRecord(CSVRecord csvRecord) {
         DocumentCategory documentCategory = new DocumentCategory();
         List<String> fields = getUnitStringsFromRecord(csvRecord);
         documentCategory.setCodiceDocumento(fields.get(0));
@@ -75,8 +75,8 @@ public class CustomConverter {
         return documentCategory;
     }
 
-    public static Article getArticleFromRecord(CSVRecord csvRecord){
-        Article article = new Article.ArticleBuilder("","").build();
+    public static Article getArticleFromRecord(CSVRecord csvRecord) {
+        Article article = new Article.ArticleBuilder("", "").build();
         List<String> fields = getUnitStringsFromRecord(csvRecord);
         article.setCodiceArticolo(fields.get(0));
         article.setDescrizione(fields.get(1));
@@ -105,7 +105,7 @@ public class CustomConverter {
         return article;
     }
 
-    public static Expiration getExpirationFromRecord(CSVRecord csvRecord){
+    public static Expiration getExpirationFromRecord(CSVRecord csvRecord) {
         Expiration expiration = new Expiration();
         List<String> fields = getUnitStringsFromRecord(csvRecord);
         expiration.setIdScadenza(fields.get(0));
@@ -119,7 +119,7 @@ public class CustomConverter {
         return expiration;
     }
 
-    public static History getHistoryFromRecord(CSVRecord csvRecord){
+    public static History getHistoryFromRecord(CSVRecord csvRecord) {
         History history = new History();
         List<String> fields = getUnitStringsFromRecord(csvRecord);
         history.setCodiceDocumento(fields.get(0));
@@ -133,7 +133,7 @@ public class CustomConverter {
         return history;
     }
 
-    public static Listino getListinoFromRecord(CSVRecord csvRecord){
+    public static Listino getListinoFromRecord(CSVRecord csvRecord) {
         Listino listino = new Listino();
         List<String> fields = getUnitStringsFromRecord(csvRecord);
         listino.setIdListino(fields.get(0));
@@ -148,7 +148,7 @@ public class CustomConverter {
         return listino;
     }
 
-    public static Lotti getLottiFromRecord(CSVRecord csvRecord){
+    public static Lotti getLottiFromRecord(CSVRecord csvRecord) {
         Lotti lotti = new Lotti();
         List<String> fields = getUnitStringsFromRecord(csvRecord);
         lotti.setIdLotto(fields.get(0));
@@ -157,7 +157,7 @@ public class CustomConverter {
         return lotti;
     }
 
-    public static Payment getPaymentFromRecord(CSVRecord csvRecord){
+    public static Payment getPaymentFromRecord(CSVRecord csvRecord) {
         Payment payment = new Payment();
         List<String> fields = getUnitStringsFromRecord(csvRecord);
         payment.setCodicePagamento(fields.get(0));
@@ -165,7 +165,7 @@ public class CustomConverter {
         return payment;
     }
 
-    public static Vat getVatFromRecord(CSVRecord csvRecord){
+    public static Vat getVatFromRecord(CSVRecord csvRecord) {
         Vat vat = new Vat();
         List<String> fields = getUnitStringsFromRecord(csvRecord);
         vat.setCodiceIva(fields.get(0));
@@ -212,10 +212,10 @@ public class CustomConverter {
         return docTes;
     }
 
-    public static List<String> getUnitStringsFromRecord(CSVRecord csvRecord){
-        List<String > fields = new ArrayList<>();
-        for(int i =0 ; i<csvRecord.size(); i++) {
-            for(int j=0 ; j<csvRecord.get(i).split("\\;").length; j++){
+    public static List<String> getUnitStringsFromRecord(CSVRecord csvRecord) {
+        List<String> fields = new ArrayList<>();
+        for (int i = 0; i < csvRecord.size(); i++) {
+            for (int j = 0; j < csvRecord.get(i).split("\\;").length; j++) {
                 fields.add(csvRecord.get(i).split("\\;")[j]);
             }
         }

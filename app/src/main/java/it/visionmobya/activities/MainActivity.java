@@ -15,6 +15,8 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import java.lang.ref.WeakReference;
+
 import it.visionmobya.CSVModule.VisionFileManager;
 import it.visionmobya.Interface.ProgressBarMessage;
 import it.visionmobya.R;
@@ -42,8 +44,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String password = mySharedPref.getStringFromSharedPref(CodesUtil.PASSWORD);
             String url = mySharedPref.getStringFromSharedPref(CodesUtil.URL);
             String port = mySharedPref.getStringFromSharedPref(CodesUtil.PORT);
-            if(port.equals(MySharedPref.GET_STRING_FAILED)){
-                port  = "21";
+            if (port.equals(MySharedPref.GET_STRING_FAILED)) {
+                port = "21";
             }
             ServerCredentials serverCredentials = new ServerCredentials(username, password, url, Integer.valueOf(port));
             String importDirectory = Utils.getAgentWorkingDirectory(username, Utils.IMPORT);
@@ -51,12 +53,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             serverCredentials.setImportDirectory(importDirectory);
             serverCredentials.setExportDirectory(exportDirectory);
             mySharedPref.saveObjectToSharedPreference(CodesUtil.SERVER_CREDENTIALS_OBJECT, serverCredentials);
-            new LoadFilesTask().execute();
+            new LoadFilesTask(this).execute();
         }
 
-        if(getIntent().getStringExtra(CodesUtil.REDIRECT_FILE_SAVE) != null){
-            if(getIntent().getStringExtra(CodesUtil.REDIRECT_FILE_SAVE).equals(CodesUtil.SUCCESS_MESSAGE)){
-                Snackbar.make(relNewDoc,"The files were succesfully uploaded!", Snackbar.LENGTH_LONG)
+        if (getIntent().getStringExtra(CodesUtil.REDIRECT_FILE_SAVE) != null) {
+            if (getIntent().getStringExtra(CodesUtil.REDIRECT_FILE_SAVE).equals(CodesUtil.SUCCESS_MESSAGE)) {
+                Snackbar.make(relNewDoc, "The files were succesfully uploaded!", Snackbar.LENGTH_LONG)
                         .show();
             }
         }
@@ -128,39 +130,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         relExit.setOnClickListener(this);
     }
 
-
-    private class LoadFilesTask extends AsyncTask<Void, Void, Void> implements ProgressBarMessage {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(MainActivity.this);
-            progressDialog.setMessage("Loading Data!");
-            progressDialog.setIndeterminate(false);
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        }
-
-        @Override
-        protected Void doInBackground(Void... contexts) {
-            VisionFileManager.getInstance().init(MainActivity.this, this);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            progressDialog.dismiss();
-            progressDialog = null;
-        }
-
-        @Override
-        public void onLoadFile(String progressMessage) {
-            progressDialog.setMessage(progressMessage);
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
@@ -168,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private void logOut(){
+    private void logOut() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this, R.style.AlertDialogBox);
         alertDialog.setTitle("Esci");
         alertDialog.setMessage("Sei sicuro di voler uscire?");
@@ -199,5 +168,55 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return super.onOptionsItemSelected(item);
         }
 
+    }
+
+    private class LoadFilesTask extends AsyncTask<Void, Void, Void> implements ProgressBarMessage {
+
+        private WeakReference<MainActivity> mainActivityRef;
+
+        public LoadFilesTask(MainActivity mainActivity) {
+            this.mainActivityRef = new WeakReference<>(mainActivity);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            if (mainActivityRef.get() != null) {
+                progressDialog = new ProgressDialog(mainActivityRef.get());
+                progressDialog.setMessage("Loading Data!");
+                progressDialog.setIndeterminate(false);
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+            }
+        }
+
+        @Override
+        protected Void doInBackground(Void... contexts) {
+            VisionFileManager.getInstance().init(mainActivityRef.get(), this);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (mainActivityRef.get() != null) {
+                progressDialog.dismiss();
+                progressDialog = null;
+            }
+        }
+
+        @Override
+        public void onLoadFile(final String progressMessage) {
+            if (mainActivityRef.get() != null) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressDialog.setMessage(progressMessage);
+                    }
+                });
+
+            }
+        }
     }
 }

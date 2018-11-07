@@ -2,20 +2,18 @@ package it.visionmobya.fragments;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import it.visionmobya.R;
-import it.visionmobya.models.Article;
 import it.visionmobya.models.customModels.DocumentState;
 
 public class ArticleDetailsDialog extends Dialog {
 
     private Context context;
-    private TextView article_name , quantity_value, unit_of_measure, prezzo_unit, sconto_value , sconto_percentuale , imponibile, prezzo_totale;
+    private TextView article_name, quantity_value, unit_of_measure, prezzo_unit, sconto_value, sconto_percentuale, imponibile, prezzo_totale;
     private DocumentState documentState;
     private Button indietro;
 
@@ -26,7 +24,7 @@ public class ArticleDetailsDialog extends Dialog {
         initUI();
     }
 
-    private void initUI(){
+    private void initUI() {
         article_name = findViewById(R.id.article_name);
         quantity_value = findViewById(R.id.quantity_value);
         unit_of_measure = findViewById(R.id.unit_of_measure);
@@ -52,7 +50,7 @@ public class ArticleDetailsDialog extends Dialog {
         this.hide();
     }
 
-    private void bindDataToUI(){
+    private void bindDataToUI() {
         setTitle(documentState.getArticle().getCodiceArticolo());
         this.article_name.setText(documentState.getArticle().getDescrizione());
         this.quantity_value.setText(documentState.getQuantita().toString());

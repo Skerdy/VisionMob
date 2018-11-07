@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -30,7 +29,7 @@ public class RecyclerViewDialog extends Dialog {
         initDialogUI();
     }
 
-    private void initDialogUI(){
+    private void initDialogUI() {
         recyclerView = findViewById(R.id.recycler_view);
         backArrow = findViewById(R.id.back_arrow);
         searchView = findViewById(R.id.search_view);
@@ -88,16 +87,16 @@ public class RecyclerViewDialog extends Dialog {
         });
     }
 
-    public void setTitle(String title){
+    public void setTitle(String title) {
         setTitle(title);
     }
 
-    public void setAdapter(RecyclerView.Adapter adapter){
-        recyclerView.setAdapter(adapter);
+    public RecyclerView.Adapter getAdapter() {
+        return recyclerView.getAdapter();
     }
 
-    public RecyclerView.Adapter getAdapter(){
-        return  recyclerView.getAdapter();
+    public void setAdapter(RecyclerView.Adapter adapter) {
+        recyclerView.setAdapter(adapter);
     }
 
 

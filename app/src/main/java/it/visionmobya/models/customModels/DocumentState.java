@@ -17,6 +17,17 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DocumentState implements Serializable, Parcelable {
 
+    public static final Creator<DocumentState> CREATOR = new Creator<DocumentState>() {
+        @Override
+        public DocumentState createFromParcel(Parcel in) {
+            return new DocumentState(in);
+        }
+
+        @Override
+        public DocumentState[] newArray(int size) {
+            return new DocumentState[size];
+        }
+    };
     private Article article;
     private String descrizione;
     private Double quantita;
@@ -31,7 +42,7 @@ public class DocumentState implements Serializable, Parcelable {
     @Builder.Default
     private boolean bindDirectly = false;
 
-    public DocumentState(){
+    public DocumentState() {
 
     }
 
@@ -142,16 +153,4 @@ public class DocumentState implements Serializable, Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<DocumentState> CREATOR = new Creator<DocumentState>() {
-        @Override
-        public DocumentState createFromParcel(Parcel in) {
-            return new DocumentState(in);
-        }
-
-        @Override
-        public DocumentState[] newArray(int size) {
-            return new DocumentState[size];
-        }
-    };
 }

@@ -14,10 +14,7 @@ import java.util.List;
 
 import it.visionmobya.CSVModule.VisionFileManager;
 import it.visionmobya.R;
-
-import it.visionmobya.listener.OnClientClickListener;
 import it.visionmobya.listener.OnDocumentClickListener;
-import it.visionmobya.models.Client;
 import it.visionmobya.models.DocumentCategory;
 import it.visionmobya.recyclerView.adapters.DocumentTypeAdapter;
 import it.visionmobya.utils.CodesUtil;
@@ -41,7 +38,7 @@ public class DocumentTypeActivity extends AppCompatActivity implements OnDocumen
         initData();
     }
 
-    private void initUI(){
+    private void initUI() {
         toolbar = findViewById(R.id.toolbar);
         recyclerView = findViewById(R.id.rv_docType);
 

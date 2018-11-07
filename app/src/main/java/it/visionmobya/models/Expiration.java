@@ -11,7 +11,7 @@ public class Expiration {
     private String importoTotaleFattura;
     private String codiceDocumento;
 
-    public String toCsvRecord (){
+    public String toCsvRecord() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(idScadenza).append(";")
                 .append(dataFattura).append(";")

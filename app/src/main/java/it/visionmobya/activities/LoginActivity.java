@@ -8,17 +8,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.visionmobya.CSVModule.CSVWriter;
 import it.visionmobya.CSVModule.TextFiles;
 import it.visionmobya.CSVModule.VisionFileManager;
 import it.visionmobya.FTPClient.FtpClientTask;
 import it.visionmobya.R;
-import it.visionmobya.models.Article;
-import it.visionmobya.models.DocRig;
 import it.visionmobya.models.customModels.ServerCredentials;
 import it.visionmobya.models.customModels.ServerRequest;
 import it.visionmobya.utils.CodesUtil;
@@ -49,11 +45,10 @@ public class LoginActivity extends AppCompatActivity {
         } else {
             visionFileManager = VisionFileManager.getInstance();
             if (mySharedPref.getStringFromSharedPref(CodesUtil.USER_NAME) != null) {
-                if(mySharedPref.getStringFromSharedPref(CodesUtil.USER_NAME).equals("failedToGetStringFromShared")){
+                if (mySharedPref.getStringFromSharedPref(CodesUtil.USER_NAME).equals("failedToGetStringFromShared")) {
                     agentCode.setText("");
-                }
-                else
-                agentCode.setText(mySharedPref.getStringFromSharedPref(CodesUtil.USER_NAME).replace("\"", ""));
+                } else
+                    agentCode.setText(mySharedPref.getStringFromSharedPref(CodesUtil.USER_NAME).replace("\"", ""));
             }
         }
     }
@@ -71,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Utils.hideKeyboardFrom(LoginActivity.this, loginBtn);
                 if (validate()) {
-                    login(agentCode.getText().toString(), etPass.getText().toString(), etUrl.getText().toString(), Integer.valueOf(etPort.getText().toString()+""));
+                    login(agentCode.getText().toString(), etPass.getText().toString(), etUrl.getText().toString(), Integer.valueOf(etPort.getText().toString() + ""));
                 }
             }
         });
@@ -114,7 +109,7 @@ public class LoginActivity extends AppCompatActivity {
         ftpClientTask.execute(new ServerRequest(this, serverCredentials, files));
     }
 
-    private List<String> getAllFiles(){
+    private List<String> getAllFiles() {
         List<String> files = new ArrayList<>();
         files.add(TextFiles.MAGGRP);
         files.add(TextFiles.ANAGRAFE);

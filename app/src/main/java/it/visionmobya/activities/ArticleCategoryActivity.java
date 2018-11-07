@@ -16,8 +16,6 @@ import java.util.List;
 import it.visionmobya.CSVModule.VisionFileManager;
 import it.visionmobya.R;
 import it.visionmobya.listener.OnArticleCategoryClickListener;
-import it.visionmobya.listener.OnArticleClickListener;
-import it.visionmobya.models.Article;
 import it.visionmobya.models.ArticleCategory;
 import it.visionmobya.recyclerView.adapters.ArticleCategoryAdapter;
 import it.visionmobya.utils.CodesUtil;
@@ -28,6 +26,7 @@ public class ArticleCategoryActivity extends AppCompatActivity implements OnArti
     ArticleCategoryAdapter articleCategoryAdapter;
     List<ArticleCategory> articleCategories;
     VisionFileManager visionFileManager;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +49,7 @@ public class ArticleCategoryActivity extends AppCompatActivity implements OnArti
         LinearLayoutManager llm1 = new LinearLayoutManager(this);
         llm1.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm1);
-        articleCategoryAdapter = new ArticleCategoryAdapter(new ArrayList<ArticleCategory>(),this);
+        articleCategoryAdapter = new ArticleCategoryAdapter(new ArrayList<ArticleCategory>(), this);
         recyclerView.setAdapter(articleCategoryAdapter);
         try {
             initData();
@@ -67,7 +66,7 @@ public class ArticleCategoryActivity extends AppCompatActivity implements OnArti
 
     @Override
     public void onArticleCategoryClicked(ArticleCategory articleCategory, int position) {
-        Intent intent = new Intent(this,ArticleActivity.class);
+        Intent intent = new Intent(this, ArticleActivity.class);
         intent.putExtra(CodesUtil.ARTICLE_CATEGORY, articleCategory.getId());
         startActivity(intent);
     }

@@ -56,11 +56,12 @@ public class ClientListAdapter extends RecyclerView.Adapter<ClientListViewHolder
         });
     }
 
-    public void setClients(List<Client> clients ) {
+    public void setClients(List<Client> clients) {
         this.clients = clients;
         this.permanentClients = clients;
         this.notifyDataSetChanged();
     }
+
     @Override
     public int getItemCount() {
         return clients.size();
@@ -75,13 +76,13 @@ public class ClientListAdapter extends RecyclerView.Adapter<ClientListViewHolder
                 FilterResults results = new FilterResults();
                 if (charSequence != null && charSequence.length() > 0) {
                     charSequence = charSequence.toString().toUpperCase();
-                     filteredClients  = new ArrayList<>();
+                    filteredClients = new ArrayList<>();
                     for (int i = 0; i < permanentClients.size(); i++) {
                         if (permanentClients.get(i).getRagioneSociale().toUpperCase().contains(charSequence)) {
                             filteredClients.add(permanentClients.get(i));
-                        }else if (permanentClients.get(i).getIndirizzo().toUpperCase().contains(charSequence)) {
+                        } else if (permanentClients.get(i).getIndirizzo().toUpperCase().contains(charSequence)) {
                             filteredClients.add(permanentClients.get(i));
-                        }else if (permanentClients.get(i).getCodiceCliente().toUpperCase().contains(charSequence)) {
+                        } else if (permanentClients.get(i).getCodiceCliente().toUpperCase().contains(charSequence)) {
                             filteredClients.add(permanentClients.get(i));
                         }
                     }

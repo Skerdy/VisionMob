@@ -10,6 +10,7 @@ import it.visionmobya.R;
 
 public class ProfileClientActivity extends AppCompatActivity {
     Toolbar toolbar;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

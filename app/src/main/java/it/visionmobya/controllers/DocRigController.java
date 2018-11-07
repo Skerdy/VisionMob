@@ -9,10 +9,10 @@ import it.visionmobya.models.DocRig;
 
 public class DocRigController {
 
-    private DocRigController(){
+    private DocRigController() {
     }
 
-    public static List<DocRig> getAllDocRigas(){
+    public static List<DocRig> getAllDocRigas() {
         List<DocRig> result = new ArrayList<>();
         try {
             result = VisionFileManager.getInstance().getAllDocumentRigas();
@@ -22,13 +22,12 @@ public class DocRigController {
         return result;
     }
 
-    public static int getLastIdRiga(){
+    public static int getLastIdRiga() {
         List<DocRig> list = getAllDocRigas();
-        if(list.isEmpty()){
+        if (list.isEmpty()) {
             return 1;
-        }
-        else {
-            return Integer.parseInt(list.get(list.size()-1).getIdRiga());
+        } else {
+            return Integer.parseInt(list.get(list.size() - 1).getIdRiga());
         }
     }
 }

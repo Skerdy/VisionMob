@@ -13,7 +13,7 @@ public class ArticleDiffUtil extends DiffUtil.Callback {
     public List<Article> oldArticles;
     public List<Article> newArticles;
 
-    public ArticleDiffUtil(List<Article> newArticles, List<Article> oldArticles){
+    public ArticleDiffUtil(List<Article> newArticles, List<Article> oldArticles) {
         this.newArticles = newArticles;
         this.oldArticles = oldArticles;
     }

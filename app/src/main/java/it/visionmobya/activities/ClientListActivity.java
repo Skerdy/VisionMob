@@ -54,7 +54,7 @@ public class ClientListActivity extends AppCompatActivity implements OnClientCli
         initData();
     }
 
-    private void initUI(){
+    private void initUI() {
         toolbar = findViewById(R.id.toolbar);
         recyclerView = findViewById(R.id.rv_clientList);
         zona = findViewById(R.id.zona);
@@ -89,7 +89,7 @@ public class ClientListActivity extends AppCompatActivity implements OnClientCli
         recyclerView.setAdapter(clientListAdapter);
     }
 
-    private void initData()  {
+    private void initData() {
         visionFileManager = VisionFileManager.getInstance();
         clients = visionFileManager.getClients();
         clientListAdapter.setClients(clients);
@@ -105,16 +105,16 @@ public class ClientListActivity extends AppCompatActivity implements OnClientCli
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Log.d("Filter", "TextSubmit : " + query );
-              //  clients = clientListAdapter.clients;
-             //   clientListAdapter.getFilter().filter(query);
+                Log.d("Filter", "TextSubmit : " + query);
+                //  clients = clientListAdapter.clients;
+                //   clientListAdapter.getFilter().filter(query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                Log.d("Filter", "TextChange : " + newText );
-                    clientListAdapter.getFilter().filter(newText);
+                Log.d("Filter", "TextChange : " + newText);
+                clientListAdapter.getFilter().filter(newText);
                 return false;
             }
         });
@@ -130,9 +130,9 @@ public class ClientListActivity extends AppCompatActivity implements OnClientCli
     }
 
 
-    private void getDocumentFromIntent(){
-        if(getIntent().getBundleExtra(CodesUtil.DOCUMENT_TYPE_TO_CLIENT_LIST)!=null){
-            if(getIntent().getBundleExtra(CodesUtil.DOCUMENT_TYPE_TO_CLIENT_LIST).getSerializable(CodesUtil.DOCUMENT_TYPE_ARGUMENT)!=null){
+    private void getDocumentFromIntent() {
+        if (getIntent().getBundleExtra(CodesUtil.DOCUMENT_TYPE_TO_CLIENT_LIST) != null) {
+            if (getIntent().getBundleExtra(CodesUtil.DOCUMENT_TYPE_TO_CLIENT_LIST).getSerializable(CodesUtil.DOCUMENT_TYPE_ARGUMENT) != null) {
                 DocumentCategory documentCategory = (DocumentCategory) getIntent().getBundleExtra(CodesUtil.DOCUMENT_TYPE_TO_CLIENT_LIST).getSerializable(CodesUtil.DOCUMENT_TYPE_ARGUMENT);
                 this.selectedDocumentCategory = documentCategory;
                 bindDocumentDataToActivity(documentCategory);
@@ -140,9 +140,9 @@ public class ClientListActivity extends AppCompatActivity implements OnClientCli
         }
     }
 
-    private void bindDocumentDataToActivity(DocumentCategory documentCategory){
+    private void bindDocumentDataToActivity(DocumentCategory documentCategory) {
         //ne fillim ver daten e sotme
-       setTopTitleText(documentCategory, new Date());
+        setTopTitleText(documentCategory, new Date());
 
     }
 
@@ -160,13 +160,13 @@ public class ClientListActivity extends AppCompatActivity implements OnClientCli
         Bundle bundle = new Bundle();
         bundle.putSerializable(CodesUtil.CLIENT_ARGUMENT, client);
         bundle.putSerializable(CodesUtil.DOCUMENT_TYPE_ARGUMENT, selectedDocumentCategory);
-        bundle.putSerializable(CodesUtil.DATE_ARGUMENT,pickedDate);
+        bundle.putSerializable(CodesUtil.DATE_ARGUMENT, pickedDate);
         intent.putExtra(CodesUtil.CLIENT_LIST_TO_CLIENT_ORDER, bundle);
         startActivity(intent);
         finish();
     }
 
-    private void setupDatePicker(){
+    private void setupDatePicker() {
         Calendar now = Calendar.getInstance();
         final DatePickerDialog dpd = DatePickerDialog.newInstance(
                 ClientListActivity.this,
@@ -185,11 +185,11 @@ public class ClientListActivity extends AppCompatActivity implements OnClientCli
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(year, monthOfYear, dayOfMonth);
-            Date date = calendar.getTime();
-            this.pickedDate = date;
-            setTopTitleText(selectedDocumentCategory, date);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, monthOfYear, dayOfMonth);
+        Date date = calendar.getTime();
+        this.pickedDate = date;
+        setTopTitleText(selectedDocumentCategory, date);
     }
 
 

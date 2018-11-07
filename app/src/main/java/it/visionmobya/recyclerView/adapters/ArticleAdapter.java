@@ -3,7 +3,6 @@ package it.visionmobya.recyclerView.adapters;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +15,10 @@ import java.util.List;
 import it.visionmobya.R;
 import it.visionmobya.listener.OnArticleClickListener;
 import it.visionmobya.models.Article;
-import it.visionmobya.models.Client;
 import it.visionmobya.recyclerView.diffUtil.ArticleDiffUtil;
 import it.visionmobya.recyclerView.viewholders.ArticleViewHolder;
 
-public class ArticleAdapter extends RecyclerView.Adapter<ArticleViewHolder>  implements Filterable {
+public class ArticleAdapter extends RecyclerView.Adapter<ArticleViewHolder> implements Filterable {
 
     private List<Article> articles;
     private List<Article> filteredArticles;
@@ -50,7 +48,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleViewHolder>  imp
         holder.articleItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(onArticleClickListener!=null){
+                if (onArticleClickListener != null) {
                     onArticleClickListener.onArticleClicked(articles.get(position), position);
                 }
             }
@@ -63,7 +61,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleViewHolder>  imp
     }
 
     public void setArticle(List<Article> article) {
-        this.articles =article;
+        this.articles = article;
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new ArticleDiffUtil(this.articles, article));
         diffResult.dispatchUpdatesTo(this);
         this.notifyDataSetChanged();
@@ -77,11 +75,11 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleViewHolder>  imp
                 FilterResults results = new FilterResults();
                 if (charSequence != null && charSequence.length() > 0) {
                     charSequence = charSequence.toString().toUpperCase();
-                    filteredArticles  = new ArrayList<>();
+                    filteredArticles = new ArrayList<>();
                     for (int i = 0; i < permanentArticles.size(); i++) {
                         if (permanentArticles.get(i).getCodiceArticolo().toUpperCase().contains(charSequence)) {
                             filteredArticles.add(permanentArticles.get(i));
-                        }else if (permanentArticles.get(i).getDescrizione().toUpperCase().contains(charSequence)) {
+                        } else if (permanentArticles.get(i).getDescrizione().toUpperCase().contains(charSequence)) {
                             filteredArticles.add(permanentArticles.get(i));
                         }
                     }

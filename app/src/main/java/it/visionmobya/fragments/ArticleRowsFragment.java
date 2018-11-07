@@ -35,11 +35,10 @@ public class ArticleRowsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(getArguments().getSerializable(FRAGMENT_ARGUMENTS)!=null){
+        if (getArguments().getSerializable(FRAGMENT_ARGUMENTS) != null) {
             //nese ka nje dokument state per kete fragment atehere e marrim dhe e atachojme ne referencen publike te document state te fragmentit specifik
-            documentStates =  getArguments().getParcelableArrayList(FRAGMENT_ARGUMENTS);
-        }
-        else {
+            documentStates = getArguments().getParcelableArrayList(FRAGMENT_ARGUMENTS);
+        } else {
             documentStates = new ArrayList<>();
         }
     }
@@ -59,7 +58,7 @@ public class ArticleRowsFragment extends Fragment {
         LinearLayoutManager llm1 = new LinearLayoutManager(getContext());
         llm1.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm1);
-        articleRowsAdapter = new ArticleRowsAdapter(documentStates,getContext());
+        articleRowsAdapter = new ArticleRowsAdapter(documentStates, getContext());
         recyclerView.setAdapter(articleRowsAdapter);
     }
 }

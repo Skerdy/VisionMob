@@ -40,7 +40,7 @@ public class DocRig {
         noteRiga = docRigBuilder.noteRiga;
     }
 
-    public String toCSVRecord(){
+    public String toCSVRecord() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(idTesta).append(";")
                 .append(idRiga).append(";")
